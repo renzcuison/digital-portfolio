@@ -18,7 +18,7 @@ export default function Home() {
   const [showPhrase, setShowPhrase] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const phrase = "tuff. im that dev.";
+  const phrase = "TUFF SKIBIDI DEV.";
 
   useEffect(() => {
     setMounted(true);
@@ -53,7 +53,7 @@ export default function Home() {
     <main className="relative min-h-screen w-full bg-white dark:bg-black transition-colors duration-500 overflow-hidden">
       <div className="relative z-[100] flex flex-col items-center min-h-screen w-full pointer-events-none">
 
-        <header className="w-full max-w-7xl mx-auto px-6 md:px-10 py-6 flex items-center justify-between pointer-events-auto">
+        <header className="w-full px-6 py-3 flex items-center justify-between pointer-events-auto">
           <div
             className="flex items-center group cursor-default pointer-events-auto select-none"
             onMouseEnter={() => setIsHovered(true)}
@@ -102,12 +102,11 @@ export default function Home() {
           </div>
 
           <div className="flex items-center justify-end">
-            {/* Desktop/iPad Icons: Added -mr-2 to pull content to the right edge */}
             <div className="hidden md:flex items-center gap-1 -mr-2">
               <Button variant="ghost" size="icon" asChild className="text-slate-950 dark:text-white group w-auto px-2 justify-start overflow-hidden transition-all duration-300">
                 <a href="https://github.com/renzcuison" target="_blank" rel="noopener noreferrer" className="flex items-center">
                   <Github className="h-5 w-5 shrink-0" />
-                  <span className="max-w-0 overflow-hidden group-hover:max-w-[100px] transition-all duration-300 ease-in-out text-sm font-medium whitespace-nowrap">
+                  <span className="max-w-0 overflow-hidden group-hover:max-w-[100px] group-hover:ml-2 transition-all duration-300 ease-in-out text-sm font-medium whitespace-nowrap">
                     GitHub
                   </span>
                 </a>
@@ -116,7 +115,7 @@ export default function Home() {
               <Button variant="ghost" size="icon" asChild className="text-slate-950 dark:text-white group w-auto px-2 justify-start overflow-hidden transition-all duration-300">
                 <a href="https://linkedin.com/in/renzcuison" target="_blank" rel="noopener noreferrer" className="flex items-center">
                   <Linkedin className="h-5 w-5 shrink-0" />
-                  <span className="max-w-0 overflow-hidden group-hover:max-w-[100px] transition-all duration-300 ease-in-out text-sm font-medium whitespace-nowrap">
+                  <span className="max-w-0 overflow-hidden group-hover:max-w-[100px] group-hover:ml-2 transition-all duration-300 ease-in-out text-sm font-medium whitespace-nowrap">
                     LinkedIn
                   </span>
                 </a>
@@ -138,7 +137,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Mobile Hamburger: Kept as is since you said it's perfect */}
+            {/* Mobile Hamburger */}
             <div className="md:hidden flex items-center justify-end">
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
@@ -159,6 +158,7 @@ export default function Home() {
             </div>
           </div>
         </header>
+
         <AnimatePresence>
           {menuOpen && (
             <motion.div

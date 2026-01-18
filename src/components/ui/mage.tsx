@@ -1,5 +1,5 @@
 "use client";
-import { motion, useMotionValue, useTransform, useSpring, useVelocity } from "framer-motion";
+import { motion, useMotionValue, useTransform, useSpring, useVelocity, useAnimationFrame } from "framer-motion";
 import React, { useEffect, useState, useRef } from "react";
 import { useTheme } from "next-themes";
 
@@ -12,7 +12,6 @@ export default function Mage() {
     const y = useMotionValue(0);
     const mouseX = useSpring(x, { stiffness: 150, damping: 20 });
     const mouseY = useSpring(y, { stiffness: 150, damping: 20 });
-
     const rotateX = useTransform(mouseY, [-0.5, 0.5], [15, -15]);
     const rotateY = useTransform(mouseX, [-0.5, 0.5], [-20, 20]);
 
@@ -23,9 +22,17 @@ export default function Mage() {
 
     const joltProgress = useMotionValue(0);
     const joltSpring = useSpring(joltProgress, { stiffness: 300, damping: 15 });
-
     const zDepth = useTransform(joltSpring, [0, 1], [80, 250]);
 
+    const rainbowPos = useMotionValue(0);
+    useAnimationFrame((_, delta) => {
+        const speedMultiplier = 0.05 + (joltSpring.get() * 0.2);
+        const currentPos = rainbowPos.get();
+        rainbowPos.set((currentPos + delta * speedMultiplier) % 133.33);
+    });
+
+    const rainbowX = useTransform(rainbowPos, (v) => `${v}%`);
+    const [rippleDur, setRippleDur] = useState("10s");
     const [dotColor, setDotColor] = useState("white");
     const [isLightMode, setIsLightMode] = useState(false);
 
@@ -38,7 +45,6 @@ export default function Mage() {
 
     useEffect(() => {
         setMounted(true);
-
         if (theme === "light") {
             setDotColor("black");
             setIsLightMode(true);
@@ -57,16 +63,15 @@ export default function Mage() {
             meltEnergy.set(meltEnergy.get() + e.deltaY);
         };
 
-        const updateDistortion = () => {
-            const total = 25 + Math.abs(meltVelocity.get() / 15);
-            setDistortionScale(total);
-        };
+        const unsubMelt = meltVelocity.on("change", (v) => {
+            setDistortionScale(25 + Math.abs(v / 15));
+        });
 
-        const unsubScroll = meltVelocity.on("change", updateDistortion);
+        const unsubJolt = joltSpring.on("change", (v) => {
+            setRippleDur(v > 0.5 ? "1.5s" : "10s");
+        });
 
-        const handleGlobalDown = (e: MouseEvent) => {
-            if (e.button === 0) joltProgress.set(1);
-        };
+        const handleGlobalDown = (e: MouseEvent) => { if (e.button === 0) joltProgress.set(1); };
         const handleGlobalUp = () => joltProgress.set(0);
 
         window.addEventListener("mousemove", handleMouseMove);
@@ -75,13 +80,14 @@ export default function Mage() {
         window.addEventListener("mouseup", handleGlobalUp);
 
         return () => {
-            unsubScroll();
+            unsubMelt();
+            unsubJolt();
             window.removeEventListener("mousemove", handleMouseMove);
             window.removeEventListener("wheel", handleWheel);
             window.removeEventListener("mousedown", handleGlobalDown);
             window.removeEventListener("mouseup", handleGlobalUp);
         };
-    }, [theme, meltVelocity, joltProgress, x, y, meltEnergy]);
+    }, [theme, meltVelocity, joltSpring, joltProgress, x, y, meltEnergy]);
 
     const imageMask = 'url("/frieren.png")';
     const dotPattern = `radial-gradient(circle, ${dotColor} 1.8px, transparent 1.8px)`;
@@ -97,18 +103,19 @@ export default function Mage() {
             <svg className="absolute h-0 w-0">
                 <filter id="fluid-morph" x="-50%" y="-50%" width="200%" height="200%">
                     <feTurbulence type="fractalNoise" baseFrequency="0.015 0.01" numOctaves="2" seed="5">
-                        <animate attributeName="baseFrequency" dur="10s" values="0.015 0.01; 0.025 0.02; 0.015 0.01" repeatCount="indefinite" />
+                        <animate
+                            attributeName="baseFrequency"
+                            dur={rippleDur}
+                            values="0.015 0.01; 0.025 0.02; 0.015 0.01"
+                            repeatCount="indefinite"
+                        />
                     </feTurbulence>
                     <feDisplacementMap in="SourceGraphic" scale={distortionScale} />
                 </filter>
             </svg>
 
             <motion.div
-                style={{
-                    rotateX,
-                    rotateY,
-                    transformStyle: "preserve-3d",
-                }}
+                style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
                 animate={{ y: [0, -45, 0] }}
                 transition={{ y: { duration: 8, repeat: Infinity, ease: "easeInOut" } }}
                 className="relative h-[95vh] w-full max-w-[800px]"
@@ -134,9 +141,8 @@ export default function Mage() {
                             WebkitMaskImage: dotPattern,
                             maskImage: dotPattern,
                             WebkitMaskSize: "7px 7px",
+                            backgroundPositionX: rainbowX,
                         }}
-                        animate={{ backgroundPosition: ["0% 0%", "133.33% 0%"] }}
-                        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
                     />
                 </motion.div>
             </motion.div>
