@@ -1,11 +1,13 @@
 "use client";
 import { motion, useMotionValue, useTransform, useSpring, useVelocity } from "framer-motion";
 import React, { useEffect, useState, useRef } from "react";
+import { useTheme } from "next-themes";
 
 export default function Mage() {
+    const { theme } = useTheme();
+    const [mounted, setMounted] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // 1. Mouse Tracking for Tilt
     const x = useMotionValue(0);
     const y = useMotionValue(0);
     const mouseX = useSpring(x, { stiffness: 150, damping: 20 });
@@ -14,28 +16,52 @@ export default function Mage() {
     const rotateX = useTransform(mouseY, [-0.5, 0.5], [15, -15]);
     const rotateY = useTransform(mouseX, [-0.5, 0.5], [-20, 20]);
 
-    // 2. Scroll-to-Melt Logic
     const meltEnergy = useMotionValue(0);
     const springMelt = useSpring(meltEnergy, { stiffness: 60, damping: 20 });
     const meltVelocity = useVelocity(springMelt);
     const [distortionScale, setDistortionScale] = useState(25);
 
-    // 3. 3D Jolt Logic (Z-Axis Movement)
     const joltProgress = useMotionValue(0);
     const joltSpring = useSpring(joltProgress, { stiffness: 300, damping: 15 });
 
-    // This maps the click from 0 to 1 into a physical Z-translation
     const zDepth = useTransform(joltSpring, [0, 1], [80, 250]);
+
+    const [dotColor, setDotColor] = useState("white");
+    const [isLightMode, setIsLightMode] = useState(false);
+
     const impactFilter = useTransform(joltSpring, [0, 1], [
         "url(#fluid-morph) invert(0) brightness(1)",
-        "url(#fluid-morph) invert(1) brightness(2.5)"
+        isLightMode
+            ? "url(#fluid-morph) invert(0) brightness(0.1)"
+            : "url(#fluid-morph) invert(1) brightness(2.5)"
     ]);
 
     useEffect(() => {
+        setMounted(true);
+
+        if (theme === "light") {
+            setDotColor("black");
+            setIsLightMode(true);
+        } else {
+            setDotColor("white");
+            setIsLightMode(false);
+        }
+
+        const handleMouseMove = (e: MouseEvent) => {
+            const { innerWidth, innerHeight } = window;
+            x.set(e.clientX / innerWidth - 0.5);
+            y.set(e.clientY / innerHeight - 0.5);
+        };
+
+        const handleWheel = (e: WheelEvent) => {
+            meltEnergy.set(meltEnergy.get() + e.deltaY);
+        };
+
         const updateDistortion = () => {
             const total = 25 + Math.abs(meltVelocity.get() / 15);
             setDistortionScale(total);
         };
+
         const unsubScroll = meltVelocity.on("change", updateDistortion);
 
         const handleGlobalDown = (e: MouseEvent) => {
@@ -43,29 +69,30 @@ export default function Mage() {
         };
         const handleGlobalUp = () => joltProgress.set(0);
 
+        window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("wheel", handleWheel);
         window.addEventListener("mousedown", handleGlobalDown);
         window.addEventListener("mouseup", handleGlobalUp);
 
         return () => {
             unsubScroll();
+            window.removeEventListener("mousemove", handleMouseMove);
+            window.removeEventListener("wheel", handleWheel);
             window.removeEventListener("mousedown", handleGlobalDown);
             window.removeEventListener("mouseup", handleGlobalUp);
         };
-    }, [meltVelocity, joltProgress]);
+    }, [theme, meltVelocity, joltProgress, x, y, meltEnergy]);
 
     const imageMask = 'url("/frieren.png")';
-    const dotPattern = "radial-gradient(circle, white 1.8px, transparent 1.8px)";
+    const dotPattern = `radial-gradient(circle, ${dotColor} 1.8px, transparent 1.8px)`;
+
+    if (!mounted) return null;
 
     return (
         <div
             ref={containerRef}
-            className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-black [perspective:2000px] select-none cursor-auto"
-            onMouseMove={(e) => {
-                const { innerWidth, innerHeight } = window;
-                x.set(e.clientX / innerWidth - 0.5);
-                y.set(e.clientY / innerHeight - 0.5);
-            }}
-            onWheel={(e) => meltEnergy.set(meltEnergy.get() + e.deltaY)}
+            className="fixed inset-0 z-0 flex items-center justify-center overflow-hidden bg-transparent pointer-events-none select-none"
+            style={{ perspective: "2000px" }}
         >
             <svg className="absolute h-0 w-0">
                 <filter id="fluid-morph" x="-50%" y="-50%" width="200%" height="200%">
@@ -96,7 +123,6 @@ export default function Mage() {
                         maskSize: 'contain',
                         WebkitMaskRepeat: 'no-repeat',
                         maskPosition: 'center',
-                        // Physical Z-depth move
                         translateZ: zDepth,
                     }}
                 >

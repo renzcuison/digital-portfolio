@@ -102,12 +102,11 @@ export default function Home() {
           </div>
 
           <div className="flex items-center justify-end">
-            {/* Desktop/iPad Icons: Added -mr-2 to pull content to the right edge */}
-            <div className="hidden md:flex items-center gap-1 -mr-2">
+            <div className="hidden md:flex items-center gap-2">
               <Button variant="ghost" size="icon" asChild className="text-slate-950 dark:text-white group w-auto px-2 justify-start overflow-hidden transition-all duration-300">
                 <a href="https://github.com/renzcuison" target="_blank" rel="noopener noreferrer" className="flex items-center">
                   <Github className="h-5 w-5 shrink-0" />
-                  <span className="max-w-0 overflow-hidden group-hover:max-w-[100px] group-hover:ml-2 transition-all duration-300 ease-in-out text-sm font-medium whitespace-nowrap">
+                  <span className="max-w-0 overflow-hidden group-hover:max-w-[100px] transition-all duration-300 ease-in-out text-sm font-medium whitespace-nowrap">
                     GitHub
                   </span>
                 </a>
@@ -116,7 +115,7 @@ export default function Home() {
               <Button variant="ghost" size="icon" asChild className="text-slate-950 dark:text-white group w-auto px-2 justify-start overflow-hidden transition-all duration-300">
                 <a href="https://linkedin.com/in/renzcuison" target="_blank" rel="noopener noreferrer" className="flex items-center">
                   <Linkedin className="h-5 w-5 shrink-0" />
-                  <span className="max-w-0 overflow-hidden group-hover:max-w-[100px] group-hover:ml-2 transition-all duration-300 ease-in-out text-sm font-medium whitespace-nowrap">
+                  <span className="max-w-0 overflow-hidden group-hover:max-w-[100px] transition-all duration-300 ease-in-out text-sm font-medium whitespace-nowrap">
                     LinkedIn
                   </span>
                 </a>
@@ -133,12 +132,11 @@ export default function Home() {
                 </div>
               </Button>
 
-              <div className="border-l border-slate-200 dark:border-zinc-800 ml-1 pl-1">
+              <div className="border-l border-slate-200 dark:border-zinc-800 ml-2 pl-2">
                 <ModeToggle />
               </div>
             </div>
 
-            {/* Mobile Hamburger: Kept as is since you said it's perfect */}
             <div className="md:hidden flex items-center justify-end">
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
@@ -159,6 +157,7 @@ export default function Home() {
             </div>
           </div>
         </header>
+
         <AnimatePresence>
           {menuOpen && (
             <motion.div
