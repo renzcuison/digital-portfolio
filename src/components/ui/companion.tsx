@@ -3,10 +3,17 @@ import { motion, useMotionValue, useTransform, useSpring, useVelocity, useAnimat
 import React, { useEffect, useState, useRef } from "react";
 import { useTheme } from "next-themes";
 
-export default function Mage() {
+interface CompanionProps {
+    imagePath: string;
+    isActive: boolean;
+}
+
+export default function Companion({ imagePath, isActive }: CompanionProps) {
     const { theme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+
+    const [seed, setSeed] = useState(1);
 
     const x = useMotionValue(0);
     const y = useMotionValue(0);
@@ -25,7 +32,9 @@ export default function Mage() {
     const zDepth = useTransform(joltSpring, [0, 1], [80, 250]);
 
     const rainbowPos = useMotionValue(0);
+
     useAnimationFrame((_, delta) => {
+        if (!isActive) return;
         const speedMultiplier = 0.05 + (joltSpring.get() * 0.2);
         const currentPos = rainbowPos.get();
         rainbowPos.set((currentPos + delta * speedMultiplier) % 133.33);
@@ -45,6 +54,8 @@ export default function Mage() {
 
     useEffect(() => {
         setMounted(true);
+        setSeed(Math.floor(Math.random() * 1000));
+
         if (theme === "light") {
             setDotColor("black");
             setIsLightMode(true);
@@ -52,6 +63,16 @@ export default function Mage() {
             setDotColor("white");
             setIsLightMode(false);
         }
+
+        if (!isActive) return;
+
+        joltProgress.set(1);
+        meltEnergy.set(50);
+
+        const wakeUpTimer = setTimeout(() => {
+            joltProgress.set(0);
+            meltEnergy.set(0);
+        }, 150);
 
         const handleMouseMove = (e: MouseEvent) => {
             const { innerWidth, innerHeight } = window;
@@ -80,6 +101,7 @@ export default function Mage() {
         window.addEventListener("mouseup", handleGlobalUp);
 
         return () => {
+            clearTimeout(wakeUpTimer);
             unsubMelt();
             unsubJolt();
             window.removeEventListener("mousemove", handleMouseMove);
@@ -87,9 +109,9 @@ export default function Mage() {
             window.removeEventListener("mousedown", handleGlobalDown);
             window.removeEventListener("mouseup", handleGlobalUp);
         };
-    }, [theme, meltVelocity, joltSpring, joltProgress, x, y, meltEnergy]);
+    }, [theme, meltVelocity, joltSpring, joltProgress, x, y, meltEnergy, isActive, imagePath]);
 
-    const imageMask = 'url("/frieren.png")';
+    const imageMask = `url("${imagePath}")`;
     const dotPattern = `radial-gradient(circle, ${dotColor} 1.8px, transparent 1.8px)`;
 
     if (!mounted) return null;
@@ -102,12 +124,18 @@ export default function Mage() {
         >
             <svg className="absolute h-0 w-0">
                 <filter id="fluid-morph" x="-50%" y="-50%" width="200%" height="200%">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.015 0.01" numOctaves="2" seed="5">
+                    <feTurbulence
+                        type="fractalNoise"
+                        baseFrequency="0.015 0.01"
+                        numOctaves="2"
+                        seed={seed}
+                    >
                         <animate
                             attributeName="baseFrequency"
                             dur={rippleDur}
                             values="0.015 0.01; 0.025 0.02; 0.015 0.01"
                             repeatCount="indefinite"
+                            begin="0s"
                         />
                     </feTurbulence>
                     <feDisplacementMap in="SourceGraphic" scale={distortionScale} />
@@ -116,12 +144,12 @@ export default function Mage() {
 
             <motion.div
                 style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-                animate={{ y: [0, -45, 0] }}
+                animate={{ y: [0, -20, 0] }} // Subtle float for smaller objects
                 transition={{ y: { duration: 8, repeat: Infinity, ease: "easeInOut" } }}
-                className="relative h-[95vh] w-full max-w-[800px]"
+                className="relative flex items-center justify-center h-[75vh] w-full max-w-[800px]"
             >
                 <motion.div
-                    className="absolute inset-0"
+                    className="relative w-full h-full p-20 md:p-32"
                     style={{
                         filter: impactFilter,
                         WebkitMaskImage: imageMask,
@@ -129,8 +157,9 @@ export default function Mage() {
                         WebkitMaskSize: 'contain',
                         maskSize: 'contain',
                         WebkitMaskRepeat: 'no-repeat',
-                        maskPosition: 'center',
+                        maskPosition: 'center bottom',
                         translateZ: zDepth,
+                        willChange: "filter, transform",
                     }}
                 >
                     <motion.div

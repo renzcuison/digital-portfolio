@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Frieren from "@/components/ui/mage";
-// 1. Import your ThemeProvider
 import { ThemeProvider } from "@/components/ui/theme-provider";
 
 const geistSans = Geist({
@@ -27,18 +25,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <Frieren />
-
-          <main className="relative z-10">
+          <main>
             {children}
           </main>
         </ThemeProvider>

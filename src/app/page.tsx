@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Github, Mail, Linkedin, Check } from "lucide-react";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 
-const Mage = dynamic(() => import("@/components/ui/mage"), {
+const Companion = dynamic(() => import("@/components/ui/companion"), {
   ssr: false,
   loading: () => <div className="fixed inset-0 bg-transparent" />
 });
@@ -17,8 +17,34 @@ export default function Home() {
   const [isHovered, setIsHovered] = useState(false);
   const [showPhrase, setShowPhrase] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState("mage");
 
   const phrase = "TUFF SKIBIDI DEV.";
+
+  const companions = [
+    {
+      id: "mage",
+      name: "FRIEREN",
+      path: "/frieren.png",
+      bio: "A legendary elven mage who views time through the lens of eternity. Specialized in the quiet pursuit of human understanding."
+    },
+
+    {
+      id: "devil",
+      name: "REZE",
+      path: "/reze.png",
+      bio: "A Soviet sleeper agent with an explosive secret. A fleeting shadow that leaves a brilliant, devastating glow in her wake."
+    },
+
+    {
+      id: "hybrid",
+      name: "ZEROTWO",
+      path: "/zerotwo.png",
+      bio: "CODE:002. An elite pilot with klaxosaur blood and a defiant spirit. The raw intersection of humanity and machine."
+    }
+  ];
+
+  const activeCompanion = companions.find(c => c.id === selectedId) || companions[0];
 
   useEffect(() => {
     setMounted(true);
@@ -159,6 +185,42 @@ export default function Home() {
           </div>
         </header>
 
+        <div className="relative z-[100] flex flex-col items-center min-h-screen w-full pointer-events-none">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-12 pointer-events-none">
+            <div className="flex items-center">
+
+              <div className="flex flex-col items-center justify-center mr-8 select-none">
+                <h1
+                  className="font-black tracking-[-0.05em] uppercase text-slate-950/[0.08] dark:text-white/[0.08]"
+                  style={{ fontSize: "12vh", writingMode: "vertical-rl", transform: "rotate(180deg)", WebkitTextStroke: "1px currentColor" }}
+                >
+                  {activeCompanion.name}
+                </h1>
+              </div>
+
+              <div className="space-y-6 max-w-[280px] pointer-events-auto">
+                <div className="space-y-2">
+                  <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-zinc-500">Companion</h2>
+                  <div className="flex gap-3">
+                    {companions.map((comp) => (
+                      <button
+                        key={comp.id}
+                        onClick={() => setSelectedId(comp.id)}
+                        className={`w-3 h-3 rounded-full transition-all duration-300 ${selectedId === comp.id ? "bg-slate-950 dark:bg-white scale-150" : "bg-slate-950/20 dark:bg-white/20 hover:bg-white/50"
+                          }`}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <p className="text-sm text-zinc-400 leading-relaxed font-medium">
+                  {activeCompanion.bio}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <AnimatePresence>
           {menuOpen && (
             <motion.div
@@ -219,7 +281,11 @@ export default function Home() {
       </div>
 
       <div className="fixed inset-0 z-0">
-        <Mage />
+        <Companion
+          key={selectedId}
+          imagePath={activeCompanion.path}
+          isActive={true}
+        />
       </div>
     </main>
   );
