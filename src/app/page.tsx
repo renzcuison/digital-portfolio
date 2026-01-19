@@ -19,7 +19,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedId, setSelectedId] = useState("mage");
 
-  const phrase = "TUFF SKIBIDI DEV.";
+  const phrase = "TUFF. I'M THAT DEV.";
 
   const companions = [
     {
@@ -221,13 +221,10 @@ export default function Home() {
 
               <div className="flex-1 w-full min-h-0 relative flex items-center justify-center
               pointer-events-none pb-32 md:pb-0 [--offset:-40px] md:[--offset:0px]">
-                <AnimatePresence mode="wait">
-                  <Companion
-                    key={selectedId}
-                    imagePath={activeCompanion.path}
-                    isActive={true}
-                  />
-                </AnimatePresence>
+                <Companion
+                  imagePath={activeCompanion.path}
+                  isActive={true}
+                />
               </div>
 
               {/* bottom content */}

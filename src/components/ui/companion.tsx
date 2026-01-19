@@ -2,6 +2,7 @@
 import { motion, useMotionValue, useTransform, useSpring, useVelocity, useAnimationFrame } from "framer-motion";
 import React, { useEffect, useState, useRef } from "react";
 import { useTheme } from "next-themes";
+import { AnimatePresence } from "framer-motion";
 
 interface CompanionProps {
     imagePath: string;
@@ -92,8 +93,16 @@ export default function Companion({ imagePath, isActive }: CompanionProps) {
             setRippleDur(v > 0.5 ? "1.5s" : "10s");
         });
 
-        const handleGlobalDown = (e: MouseEvent) => { if (e.button === 0) joltProgress.set(1); };
-        const handleGlobalUp = () => joltProgress.set(0);
+        const handleGlobalDown = (e: MouseEvent) => {
+            if (e.button === 0) {
+                joltProgress.set(1.5);
+                meltEnergy.set(200);
+            }
+        };
+        const handleGlobalUp = () => {
+            joltProgress.set(0);
+            meltEnergy.set(0);
+        };
 
         window.addEventListener("mousemove", handleMouseMove);
         window.addEventListener("wheel", handleWheel);
@@ -122,62 +131,85 @@ export default function Companion({ imagePath, isActive }: CompanionProps) {
             className="fixed inset-0 z-0 flex items-center justify-center overflow-hidden bg-transparent pointer-events-none select-none"
             style={{ perspective: "2000px" }}
         >
+
             <svg className="absolute h-0 w-0">
-                <filter id="fluid-morph" x="-50%" y="-50%" width="200%" height="200%">
+                <filter id="fluid-morph" x="-100%" y="-100%" width="300%" height="300%">
                     <feTurbulence
                         type="fractalNoise"
                         baseFrequency="0.015 0.01"
                         numOctaves="2"
                         seed={seed}
-                    >
+                        stitchTiles="stitch"
+                        result="noise"
+                    />
+                    <feOffset dx="0" dy="0" result="movingNoise">
                         <animate
-                            attributeName="baseFrequency"
-                            dur={rippleDur}
-                            values="0.015 0.01; 0.025 0.02; 0.015 0.01"
+                            attributeName="dx"
+                            from="0"
+                            to="1000"
+                            dur="15s"
                             repeatCount="indefinite"
-                            begin="0s"
                         />
-                    </feTurbulence>
-                    <feDisplacementMap in="SourceGraphic" scale={distortionScale} />
+                    </feOffset>
+                    <feDisplacementMap in="SourceGraphic" in2="movingNoise" scale={distortionScale} />
                 </filter>
             </svg>
 
             <motion.div
                 style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-                animate={{
-                    y: ["calc(var(--offset) + 0px)", "calc(var(--offset) - 15px)", "calc(var(--offset) + 0px)"]
-                }}
+                animate={{ y: [0, -15, 0] }}
                 transition={{ y: { duration: 8, repeat: Infinity, ease: "easeInOut" } }}
-                className="relative flex items-center justify-center w-full h-full max-w-[800px]"
+                className="relative flex items-center justify-center w-full h-full max-w-[800px] -translate-y-8 md:translate-y-0"
             >
-                <motion.div
-
-                    className="relative w-full h-full max-h-[45vh] md:max-h-[600px] p-4 md:p-12"
-                    style={{
-                        filter: impactFilter,
-                        WebkitMaskImage: imageMask,
-                        maskImage: imageMask,
-                        WebkitMaskSize: 'contain',
-                        maskSize: 'contain',
-                        WebkitMaskRepeat: 'no-repeat',
-                        WebkitMaskPosition: 'center',
-                        maskPosition: 'center',
-                        translateZ: zDepth,
-                        willChange: "filter, transform",
-                    }}
-                >
+                <AnimatePresence mode="wait" initial={false}>
                     <motion.div
-                        className="absolute inset-0"
-                        style={{
-                            background: "linear-gradient(90deg, #ff0000, #00ff00, #0000ff, #ff00ff, #ff0000)",
-                            backgroundSize: "400% 100%",
-                            WebkitMaskImage: dotPattern,
-                            maskImage: dotPattern,
-                            WebkitMaskSize: "7px 7px",
-                            backgroundPositionX: rainbowX,
+                        key={imagePath}
+                        initial={{
+                            opacity: 0,
+                            scale: 0.8,
+                            filter: "brightness(2) blur(15px)"
                         }}
-                    />
-                </motion.div>
+                        animate={{
+                            opacity: 1,
+                            scale: 1,
+                            filter: "brightness(1) blur(0px)"
+                        }}
+                        exit={{
+                            opacity: 0,
+                            scale: 1.1,
+                            filter: "brightness(4) blur(20px)"
+                        }}
+                        transition={{
+                            duration: 0.5,
+                            ease: "easeInOut"
+                        }}
+                        className="relative w-full h-full max-h-[45vh] md:max-h-[650px] p-4 md:p-12"
+                        style={{
+                            filter: impactFilter,
+                            WebkitMaskImage: imageMask,
+                            maskImage: imageMask,
+                            WebkitMaskSize: 'contain',
+                            maskSize: 'contain',
+                            WebkitMaskRepeat: 'no-repeat',
+                            WebkitMaskPosition: 'center',
+                            maskPosition: 'center',
+                            translateZ: zDepth,
+                            willChange: "filter, transform",
+                        }}
+                    >
+                        <motion.div
+                            className="absolute inset-0"
+                            style={{
+                                background: "linear-gradient(90deg, #ff0000, #00ff00, #0000ff, #ff00ff, #ff0000)",
+                                backgroundSize: "400% 100%",
+                                WebkitMaskImage: dotPattern,
+                                maskImage: dotPattern,
+                                WebkitMaskSize: "7px 7px",
+                                backgroundPositionX: rainbowX,
+                            }}
+                        />
+                    </motion.div>
+                </AnimatePresence>
             </motion.div>
         </div>
     );
