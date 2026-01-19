@@ -77,15 +77,19 @@ export default function Home() {
     <main className="relative h-screen w-full bg-white dark:bg-black transition-colors duration-500 overflow-hidden">
 
       <div className="fixed inset-0 z-0">
-        <Companion
-          key={selectedId}
-          imagePath={activeCompanion.path}
-          isActive={true}
-        />
+        <AnimatePresence mode="wait">
+          <Companion
+            key={selectedId}
+            imagePath={activeCompanion.path}
+            isActive={true}
+          />
+        </AnimatePresence>
       </div>
 
+      {/* main div */}
       <div className="absolute inset-0 z-[100] flex flex-col pointer-events-none">
 
+        {/* header start */}
         <header className="w-full px-6 py-3 flex items-center justify-between pointer-events-auto">
           <div
             className="flex items-center group cursor-default pointer-events-auto select-none"
@@ -190,70 +194,98 @@ export default function Home() {
             </div>
           </div>
         </header>
+        {/* header end */}
 
-        <div className="w-full px-8 md:px-12 mt-4 flex justify-between items-start">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-1">
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-950 dark:text-white">Neural.Link</span>
-            <span className="text-[8px] font-mono text-zinc-500">STABLE_CONNECTION_001</span>
-          </motion.div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-end gap-1">
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-950 dark:text-white">Protocol: Select</span>
-            <span className="text-[8px] font-mono text-zinc-500">ACTIVE_MODE: COMPANION</span>
-          </motion.div>
-        </div>
+        <AnimatePresence>
+          {!menuOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex flex-col flex-1 w-full"
+            >
 
-        <div className="flex-1" />
-
-        <div className="w-full p-8 md:p-12 flex flex-col md:flex-row justify-between items-end gap-8">
-          <div className="max-w-[280px] w-full space-y-4 pointer-events-auto">
-            <div className="space-y-1">
-              <h2 className="text-sm font-black uppercase tracking-widest text-zinc-400">Select Interface</h2>
-              <div className="flex gap-2">
-                {companions.map((comp) => (
-                  <button
-                    key={comp.id}
-                    onClick={() => setSelectedId(comp.id)}
-                    className="group relative flex-1 h-10 border border-zinc-200 dark:border-white/10 flex items-center justify-center transition-all overflow-hidden cursor-pointer"
-                  >
-                    <motion.div
-                      className="absolute inset-0 bg-slate-950 dark:bg-white"
-                      initial={false}
-                      animate={{ y: selectedId === comp.id ? 0 : "100%" }}
-                      transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-                    />
-                    <span className={`relative text-[10px] font-bold transition-colors duration-300 ${selectedId === comp.id ? "text-white dark:text-black" : "text-zinc-500"}`}>
-                      0{companions.indexOf(comp) + 1}
-                    </span>
-                  </button>
-                ))}
+              {/* top content */}
+              <div className="w-full px-8 md:px-12 mt-4 flex justify-between items-start">
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-1">
+                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-950 dark:text-white">Neural.Link</span>
+                  <span className="text-[8px] font-mono text-zinc-500">STABLE_CONNECTION_001</span>
+                </motion.div>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-end gap-1">
+                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-950 dark:text-white">Protocol: Select</span>
+                  <span className="text-[8px] font-mono text-zinc-500">ACTIVE_MODE: COMPANION</span>
+                </motion.div>
               </div>
-            </div>
-            <p className="text-[10px] font-mono text-zinc-500 leading-relaxed uppercase">
-              Initialize synchronization to deploy the active entity into the workspace.
-            </p>
-          </div>
+              {/* top content */}
 
-          <div className="max-w-[280px] w-full text-right pointer-events-auto">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={selectedId}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="space-y-2"
-              >
-                <h1 className="text-4xl font-black italic tracking-tighter text-slate-950 dark:text-white uppercase leading-none">
-                  {activeCompanion.name}
-                </h1>
-                <p className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400 font-medium">
-                  {activeCompanion.bio}
-                </p>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </div>
+              <div className="flex-1" />
+
+              {/* bottom content */}
+              {/* left */}
+              <div className="w-full p-8 md:p-12 flex flex-col md:flex-row justify-between items-end gap-8">
+                <div className="w-full md:max-w-[320px] lg:max-w-[380px] space-y-5 pointer-events-auto">
+                  <div className="space-y-2">
+                    <h2 className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500">
+                      Select Interface
+                    </h2>
+                    <div className="flex gap-2 w-full">
+                      {companions.map((comp) => (
+                        <button
+                          key={comp.id}
+                          onClick={() => setSelectedId(comp.id)}
+                          className="group relative flex-1 h-12 md:h-10 border border-zinc-200 dark:border-white/10 flex items-center justify-center transition-all overflow-hidden cursor-pointer"
+                        >
+                          <motion.div
+                            className="absolute inset-0 bg-slate-950 dark:bg-white"
+                            initial={false}
+                            animate={{ y: selectedId === comp.id ? 0 : "100%" }}
+                            transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+                          />
+                          <span className={`relative text-xs md:text-[10px] font-bold transition-colors duration-300 ${selectedId === comp.id ? "text-white dark:text-black" : "text-zinc-500"
+                            }`}>
+                            0{companions.indexOf(comp) + 1}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="hidden sm:block text-[9px] md:text-[10px] font-mono text-zinc-500 leading-relaxed uppercase tracking-tight">
+                    Initialize synchronization to deploy the active entity into the workspace.
+                  </p>
+                </div>
+                {/* left */}
+
+                {/* right */}
+                <div className="w-full md:max-w-[350px] lg:max-w-[450px] text-left md:text-right pointer-events-auto">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={selectedId}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="space-y-3 md:space-y-2"
+                    >
+                      <h1 className="text-5xl md:text-6xl lg:text-7xl font-black italic tracking-tighter text-slate-950 dark:text-white uppercase leading-[0.8]">
+                        {activeCompanion.name}
+                      </h1>
+                      <p className="text-xs md:text-[11px] lg:text-sm leading-relaxed text-zinc-500 dark:text-zinc-400 font-medium max-w-[400px] md:ml-auto">
+                        {activeCompanion.bio}
+                      </p>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
+              {/* right */}
+              {/* bottom content */}
+
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
+      {/* main div */}
 
+      {/* mobile menu start */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -310,6 +342,7 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
+      {/* mobile menu end */}
 
     </main>
   );
