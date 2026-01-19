@@ -28,14 +28,12 @@ export default function Home() {
       path: "/frieren.png",
       bio: "A legendary elven mage who views time through the lens of eternity. Specialized in the quiet pursuit of human understanding."
     },
-
     {
       id: "devil",
       name: "REZE",
       path: "/reze.png",
       bio: "A Soviet sleeper agent with an explosive secret. A fleeting shadow that leaves a brilliant, devastating glow in her wake."
     },
-
     {
       id: "hybrid",
       name: "ZEROTWO",
@@ -67,7 +65,7 @@ export default function Home() {
   };
 
   if (!mounted) {
-    return <div className="min-h-screen bg-white dark:bg-black" />;
+    return <div className="h-screen bg-white dark:bg-black" />;
   }
 
   const menuLinkVars = {
@@ -76,8 +74,17 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen w-full bg-white dark:bg-black transition-colors duration-500 overflow-hidden">
-      <div className="relative z-[100] flex flex-col items-center min-h-screen w-full pointer-events-none">
+    <main className="relative h-screen w-full bg-white dark:bg-black transition-colors duration-500 overflow-hidden">
+
+      <div className="fixed inset-0 z-0">
+        <Companion
+          key={selectedId}
+          imagePath={activeCompanion.path}
+          isActive={true}
+        />
+      </div>
+
+      <div className="absolute inset-0 z-[100] flex flex-col pointer-events-none">
 
         <header className="w-full px-6 py-3 flex items-center justify-between pointer-events-auto">
           <div
@@ -132,7 +139,7 @@ export default function Home() {
               <Button variant="ghost" size="icon" asChild className="text-slate-950 dark:text-white group w-auto px-2 justify-start overflow-hidden transition-all duration-300">
                 <a href="https://github.com/renzcuison" target="_blank" rel="noopener noreferrer" className="flex items-center">
                   <Github className="h-5 w-5 shrink-0" />
-                  <span className="max-w-0 overflow-hidden group-hover:max-w-[100px] group-hover:ml-2 transition-all duration-300 ease-in-out text-sm font-medium whitespace-nowrap">
+                  <span className="max-w-0 overflow-hidden group-hover:max-w-[100px] transition-all duration-300 ease-in-out text-sm font-medium whitespace-nowrap">
                     GitHub
                   </span>
                 </a>
@@ -141,7 +148,7 @@ export default function Home() {
               <Button variant="ghost" size="icon" asChild className="text-slate-950 dark:text-white group w-auto px-2 justify-start overflow-hidden transition-all duration-300">
                 <a href="https://linkedin.com/in/renzcuison" target="_blank" rel="noopener noreferrer" className="flex items-center">
                   <Linkedin className="h-5 w-5 shrink-0" />
-                  <span className="max-w-0 overflow-hidden group-hover:max-w-[100px] group-hover:ml-2 transition-all duration-300 ease-in-out text-sm font-medium whitespace-nowrap">
+                  <span className="max-w-0 overflow-hidden group-hover:max-w-[100px] transition-all duration-300 ease-in-out text-sm font-medium whitespace-nowrap">
                     LinkedIn
                   </span>
                 </a>
@@ -163,7 +170,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Mobile Hamburger */}
             <div className="md:hidden flex items-center justify-end">
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
@@ -185,108 +191,126 @@ export default function Home() {
           </div>
         </header>
 
-        <div className="relative z-[100] flex flex-col items-center min-h-screen w-full pointer-events-none">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-12 pointer-events-none">
-            <div className="flex items-center">
-
-              <div className="flex flex-col items-center justify-center mr-8 select-none">
-                <h1
-                  className="font-black tracking-[-0.05em] uppercase text-slate-950/[0.08] dark:text-white/[0.08]"
-                  style={{ fontSize: "12vh", writingMode: "vertical-rl", transform: "rotate(180deg)", WebkitTextStroke: "1px currentColor" }}
-                >
-                  {activeCompanion.name}
-                </h1>
-              </div>
-
-              <div className="space-y-6 max-w-[280px] pointer-events-auto">
-                <div className="space-y-2">
-                  <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-zinc-500">Companion</h2>
-                  <div className="flex gap-3">
-                    {companions.map((comp) => (
-                      <button
-                        key={comp.id}
-                        onClick={() => setSelectedId(comp.id)}
-                        className={`w-3 h-3 rounded-full transition-all duration-300 ${selectedId === comp.id ? "bg-slate-950 dark:bg-white scale-150" : "bg-slate-950/20 dark:bg-white/20 hover:bg-white/50"
-                          }`}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                <p className="text-sm text-zinc-400 leading-relaxed font-medium">
-                  {activeCompanion.bio}
-                </p>
-              </div>
-            </div>
-          </div>
+        <div className="w-full px-8 md:px-12 mt-4 flex justify-between items-start">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-1">
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-950 dark:text-white">Neural.Link</span>
+            <span className="text-[8px] font-mono text-zinc-500">STABLE_CONNECTION_001</span>
+          </motion.div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-end gap-1">
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-950 dark:text-white">Protocol: Select</span>
+            <span className="text-[8px] font-mono text-zinc-500">ACTIVE_MODE: COMPANION</span>
+          </motion.div>
         </div>
 
-        <AnimatePresence>
-          {menuOpen && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-white/40 dark:bg-black/40 backdrop-blur-3xl z-[99] md:hidden pointer-events-auto"
-            >
-              <nav className="flex flex-col justify-center h-full px-12 gap-12">
-                <div className="flex flex-col gap-10">
-                  <motion.a
-                    variants={menuLinkVars} initial="initial" animate="animate" transition={{ delay: 0.1 }}
-                    href="https://github.com/renzcuison" target="_blank"
-                    className="text-3xl font-light tracking-tight text-slate-900 dark:text-white"
-                  >
-                    GitHub
-                  </motion.a>
-                  <motion.a
-                    variants={menuLinkVars} initial="initial" animate="animate" transition={{ delay: 0.2 }}
-                    href="https://linkedin.com/in/renzcuison" target="_blank"
-                    className="text-3xl font-light tracking-tight text-slate-900 dark:text-white"
-                  >
-                    LinkedIn
-                  </motion.a>
-                  <motion.button
-                    variants={menuLinkVars}
-                    initial="initial"
-                    animate="animate"
-                    transition={{ delay: 0.3 }}
-                    onClick={copyEmail}
-                    className="flex items-baseline gap-3 text-left"
-                  >
-                    <span className="text-3xl font-light tracking-tight text-slate-900 dark:text-white">
-                      E-mail
-                    </span>
-                    <span className="text-xs font-mono text-slate-400 dark:text-zinc-600 transition-colors duration-300">
-                      {copied ? "[copied to clipboard!]" : "[rbboy099@gmail.com]"}
-                    </span>
-                  </motion.button>
-                </div>
+        <div className="flex-1" />
 
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                  className="flex items-center justify-between pt-12 border-t border-slate-200 dark:border-zinc-800"
+        <div className="w-full p-8 md:p-12 flex flex-col md:flex-row justify-between items-end gap-8">
+          <div className="max-w-[280px] w-full space-y-4 pointer-events-auto">
+            <div className="space-y-1">
+              <h2 className="text-sm font-black uppercase tracking-widest text-zinc-400">Select Interface</h2>
+              <div className="flex gap-2">
+                {companions.map((comp) => (
+                  <button
+                    key={comp.id}
+                    onClick={() => setSelectedId(comp.id)}
+                    className="group relative flex-1 h-10 border border-zinc-200 dark:border-white/10 flex items-center justify-center transition-all overflow-hidden cursor-pointer"
+                  >
+                    <motion.div
+                      className="absolute inset-0 bg-slate-950 dark:bg-white"
+                      initial={false}
+                      animate={{ y: selectedId === comp.id ? 0 : "100%" }}
+                      transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+                    />
+                    <span className={`relative text-[10px] font-bold transition-colors duration-300 ${selectedId === comp.id ? "text-white dark:text-black" : "text-zinc-500"}`}>
+                      0{companions.indexOf(comp) + 1}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <p className="text-[10px] font-mono text-zinc-500 leading-relaxed uppercase">
+              Initialize synchronization to deploy the active entity into the workspace.
+            </p>
+          </div>
+
+          <div className="max-w-[280px] w-full text-right pointer-events-auto">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={selectedId}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="space-y-2"
+              >
+                <h1 className="text-4xl font-black italic tracking-tighter text-slate-950 dark:text-white uppercase leading-none">
+                  {activeCompanion.name}
+                </h1>
+                <p className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400 font-medium">
+                  {activeCompanion.bio}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-white/40 dark:bg-black/40 backdrop-blur-3xl z-[99] md:hidden pointer-events-auto"
+          >
+            <nav className="flex flex-col justify-center h-full px-12 gap-12">
+              <div className="flex flex-col gap-10">
+                <motion.a
+                  variants={menuLinkVars} initial="initial" animate="animate" transition={{ delay: 0.1 }}
+                  href="https://github.com/renzcuison" target="_blank"
+                  className="text-3xl font-light tracking-tight text-slate-900 dark:text-white"
                 >
-                  <span className="text-[10px] uppercase tracking-[0.4em] text-slate-400 dark:text-zinc-600 font-bold">
-                    Appearance
+                  GitHub
+                </motion.a>
+                <motion.a
+                  variants={menuLinkVars} initial="initial" animate="animate" transition={{ delay: 0.2 }}
+                  href="https://linkedin.com/in/renzcuison" target="_blank"
+                  className="text-3xl font-light tracking-tight text-slate-900 dark:text-white"
+                >
+                  LinkedIn
+                </motion.a>
+                <motion.button
+                  variants={menuLinkVars}
+                  initial="initial"
+                  animate="animate"
+                  transition={{ delay: 0.3 }}
+                  onClick={copyEmail}
+                  className="flex items-baseline gap-3 text-left"
+                >
+                  <span className="text-3xl font-light tracking-tight text-slate-900 dark:text-white">
+                    E-mail
                   </span>
-                  <ModeToggle />
-                </motion.div>
-              </nav>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                  <span className="text-xs font-mono text-slate-400 dark:text-zinc-600 transition-colors duration-300">
+                    {copied ? "[copied to clipboard!]" : "[rbboy099@gmail.com]"}
+                  </span>
+                </motion.button>
+              </div>
 
-      </div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="flex items-center justify-between pt-12 border-t border-slate-200 dark:border-zinc-800"
+              >
+                <span className="text-[10px] uppercase tracking-[0.4em] text-slate-400 dark:text-zinc-600 font-bold">
+                  Appearance
+                </span>
+                <ModeToggle />
+              </motion.div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div className="fixed inset-0 z-0">
-        <Companion
-          key={selectedId}
-          imagePath={activeCompanion.path}
-          isActive={true}
-        />
-      </div>
     </main>
   );
 }

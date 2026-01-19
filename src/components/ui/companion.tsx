@@ -144,7 +144,7 @@ export default function Companion({ imagePath, isActive }: CompanionProps) {
 
             <motion.div
                 style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-                animate={{ y: [0, -20, 0] }} // Subtle float for smaller objects
+                animate={{ y: [0, -20, 0] }}
                 transition={{ y: { duration: 8, repeat: Infinity, ease: "easeInOut" } }}
                 className="relative flex items-center justify-center h-[75vh] w-full max-w-[800px]"
             >
