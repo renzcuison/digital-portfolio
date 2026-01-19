@@ -76,7 +76,7 @@ export default function Home() {
   return (
     <main className="relative h-screen w-full bg-white dark:bg-black transition-colors duration-500 overflow-hidden">
 
-      <div className="fixed inset-0 z-0">
+      {/* <div className="fixed inset-0 z-0">
         <AnimatePresence mode="wait">
           <Companion
             key={selectedId}
@@ -84,7 +84,7 @@ export default function Home() {
             isActive={true}
           />
         </AnimatePresence>
-      </div>
+      </div> */}
 
       {/* main div */}
       <div className="absolute inset-0 z-[100] flex flex-col pointer-events-none">
@@ -219,7 +219,16 @@ export default function Home() {
               </div>
               {/* top content */}
 
-              <div className="flex-1" />
+              <div className="flex-1 w-full min-h-0 relative flex items-center justify-center
+              pointer-events-none pb-32 md:pb-0 [--offset:-40px] md:[--offset:0px]">
+                <AnimatePresence mode="wait">
+                  <Companion
+                    key={selectedId}
+                    imagePath={activeCompanion.path}
+                    isActive={true}
+                  />
+                </AnimatePresence>
+              </div>
 
               {/* bottom content */}
               {/* left */}

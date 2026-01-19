@@ -116,67 +116,69 @@ export default function Companion({ imagePath, isActive }: CompanionProps) {
 
     if (!mounted) return null;
 
-return (
-  <div
-    ref={containerRef}
-    className="fixed inset-0 z-0 flex items-center justify-center overflow-hidden bg-transparent pointer-events-none select-none"
-    style={{ perspective: "2000px" }}
-  >
-    <svg className="absolute h-0 w-0">
-      <filter id="fluid-morph" x="-50%" y="-50%" width="200%" height="200%">
-        <feTurbulence
-          type="fractalNoise"
-          baseFrequency="0.015 0.01"
-          numOctaves="2"
-          seed={seed}
+    return (
+        <div
+            ref={containerRef}
+            className="fixed inset-0 z-0 flex items-center justify-center overflow-hidden bg-transparent pointer-events-none select-none"
+            style={{ perspective: "2000px" }}
         >
-          <animate
-            attributeName="baseFrequency"
-            dur={rippleDur}
-            values="0.015 0.01; 0.025 0.02; 0.015 0.01"
-            repeatCount="indefinite"
-            begin="0s"
-          />
-        </feTurbulence>
-        <feDisplacementMap in="SourceGraphic" scale={distortionScale} />
-      </filter>
-    </svg>
+            <svg className="absolute h-0 w-0">
+                <filter id="fluid-morph" x="-50%" y="-50%" width="200%" height="200%">
+                    <feTurbulence
+                        type="fractalNoise"
+                        baseFrequency="0.015 0.01"
+                        numOctaves="2"
+                        seed={seed}
+                    >
+                        <animate
+                            attributeName="baseFrequency"
+                            dur={rippleDur}
+                            values="0.015 0.01; 0.025 0.02; 0.015 0.01"
+                            repeatCount="indefinite"
+                            begin="0s"
+                        />
+                    </feTurbulence>
+                    <feDisplacementMap in="SourceGraphic" scale={distortionScale} />
+                </filter>
+            </svg>
 
-    <motion.div
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      animate={{ y: [0, -20, 0] }}
-      transition={{ y: { duration: 8, repeat: Infinity, ease: "easeInOut" } }}
-      className="relative flex items-center justify-center w-full h-full max-w-[800px]"
-    >
-      <motion.div
+            <motion.div
+                style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+                animate={{
+                    y: ["calc(var(--offset) + 0px)", "calc(var(--offset) - 15px)", "calc(var(--offset) + 0px)"]
+                }}
+                transition={{ y: { duration: 8, repeat: Infinity, ease: "easeInOut" } }}
+                className="relative flex items-center justify-center w-full h-full max-w-[800px]"
+            >
+                <motion.div
 
-        className="relative w-full h-full max-h-[600px] p-24"
-        style={{
-          filter: impactFilter,
-          WebkitMaskImage: imageMask,
-          maskImage: imageMask,
-          WebkitMaskSize: 'contain',
-          maskSize: 'contain',
-          WebkitMaskRepeat: 'no-repeat',
-          WebkitMaskPosition: 'center',
-          maskPosition: 'center',
-          translateZ: zDepth,
-          willChange: "filter, transform",
-        }}
-      >
-        <motion.div
-          className="absolute inset-0"
-          style={{
-            background: "linear-gradient(90deg, #ff0000, #00ff00, #0000ff, #ff00ff, #ff0000)",
-            backgroundSize: "400% 100%",
-            WebkitMaskImage: dotPattern,
-            maskImage: dotPattern,
-            WebkitMaskSize: "7px 7px",
-            backgroundPositionX: rainbowX,
-          }}
-        />
-      </motion.div>
-    </motion.div>
-  </div>
-);
+                    className="relative w-full h-full max-h-[45vh] md:max-h-[600px] p-4 md:p-12"
+                    style={{
+                        filter: impactFilter,
+                        WebkitMaskImage: imageMask,
+                        maskImage: imageMask,
+                        WebkitMaskSize: 'contain',
+                        maskSize: 'contain',
+                        WebkitMaskRepeat: 'no-repeat',
+                        WebkitMaskPosition: 'center',
+                        maskPosition: 'center',
+                        translateZ: zDepth,
+                        willChange: "filter, transform",
+                    }}
+                >
+                    <motion.div
+                        className="absolute inset-0"
+                        style={{
+                            background: "linear-gradient(90deg, #ff0000, #00ff00, #0000ff, #ff00ff, #ff0000)",
+                            backgroundSize: "400% 100%",
+                            WebkitMaskImage: dotPattern,
+                            maskImage: dotPattern,
+                            WebkitMaskSize: "7px 7px",
+                            backgroundPositionX: rainbowX,
+                        }}
+                    />
+                </motion.div>
+            </motion.div>
+        </div>
+    );
 }
