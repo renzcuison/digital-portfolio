@@ -132,34 +132,65 @@ export default function Companion({ imagePath, isActive }: CompanionProps) {
             style={{ perspective: "2000px" }}
         >
 
-            <svg className="absolute h-0 w-0">
-                <filter id="fluid-morph" x="-100%" y="-100%" width="300%" height="300%">
+            <svg className="absolute h-0 w-0 invisible">
+                <filter id="fluid-morph" x="-150%" y="-150%" width="400%" height="400%" colorInterpolationFilters="sRGB">
                     <feTurbulence
                         type="fractalNoise"
-                        baseFrequency="0.015 0.01"
-                        numOctaves="2"
+                        baseFrequency="0.035 0.025"
+                        numOctaves="1"
                         seed={seed}
                         stitchTiles="stitch"
                         result="noise"
                     />
-                    <feOffset dx="0" dy="0" result="movingNoise">
+                    <feOffset dx="0" dy="0">
                         <animate
                             attributeName="dx"
-                            from="0"
-                            to="1000"
-                            dur="15s"
+                            values="-200; 200; -200"
+                            dur="7s"
                             repeatCount="indefinite"
+                            calcMode="linear"
+                        />
+                        <animate
+                            attributeName="dy"
+                            values="-120; 120; -120"
+                            dur="4.7s"
+                            repeatCount="indefinite"
+                            calcMode="linear"
                         />
                     </feOffset>
-                    <feDisplacementMap in="SourceGraphic" in2="movingNoise" scale={distortionScale} />
+                    <feDisplacementMap
+                        in="SourceGraphic"
+                        scale={distortionScale}
+                    />
                 </filter>
             </svg>
 
             <motion.div
                 style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-                animate={{ y: [0, -15, 0] }}
-                transition={{ y: { duration: 8, repeat: Infinity, ease: "easeInOut" } }}
-                className="relative flex items-center justify-center w-full h-full max-w-[800px] -translate-y-8 md:translate-y-0"
+                animate={{
+                    y: [0, -40, 0],
+                    rotateZ: [-1, 1, -1],
+                    scale: [1, 1.03, 1]
+                }}
+                transition={{
+                    y: {
+                        duration: 5,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+
+                    },
+                    scale: {
+                        duration: 5,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                    },
+                    rotateZ: {
+                        duration: 7,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                    }
+                }}
+                className="relative flex items-center justify-center w-full h-full max-w-[700px] -translate-y-8 md:translate-y-0"
             >
                 <AnimatePresence mode="wait" initial={false}>
                     <motion.div
