@@ -67,6 +67,11 @@ export default function Companion({ imagePath, isActive, setIsBoosting }: Compan
         : { c1: "#00ffff", c2: "#8b00ff", c3: "#ff00ff", c4: "#0055ff" };
 
     const rgbBackground = useTransform([p1x, p1y, p2x, p2y], ([x1, y1, x2, y2]) => {
+
+        if (typeof window !== 'undefined' && window.innerWidth < 768) {
+            return `linear-gradient(to bottom, ${colors.c1}, ${colors.c2})`;
+        }
+
         const X1 = x1 as number;
         const Y1 = y1 as number;
         const X2 = x2 as number;
@@ -83,6 +88,12 @@ export default function Companion({ imagePath, isActive, setIsBoosting }: Compan
 
     useAnimationFrame((t, delta) => {
         if (!isActive) return;
+
+        if (typeof window !== 'undefined' && window.innerWidth < 768) {
+            time.set(t / 1000);
+            return;
+        }
+
         const seconds = t / 1000;
         time.set(seconds);
 
@@ -145,7 +156,7 @@ export default function Companion({ imagePath, isActive, setIsBoosting }: Compan
         <div className="fixed inset-0 z-0 flex items-center justify-center overflow-hidden bg-transparent pointer-events-none select-none" style={{ perspective: "1200px" }}>
             <motion.div
                 style={{ rotateX, rotateY, x: translateX, y: combinedY, scale: finalScale, transformStyle: "preserve-3d", pointerEvents: "auto", cursor: "pointer" }}
-                className="relative flex items-center justify-center w-full h-full max-w-[700px] 2xl:max-w-[900px] 3xl:max-w-[1100px]  -translate-y-19 md:translate-y-0"
+                className="relative flex items-center justify-center w-full h-full max-w-[700px] 2xl:max-w-[900px] 3xl:max-w-[1100px]  -translate-y-19 md:translate-y-0 will-change-transform"
                 onMouseDown={() => {
                     setIsPressed(true);
                     setIsBoosting?.(true);
