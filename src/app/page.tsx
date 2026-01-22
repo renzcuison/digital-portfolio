@@ -206,25 +206,31 @@ export default function Home() {
               className="flex flex-col flex-1 w-full"
             >
               <div className="w-full px-8 md:px-12 mt-4 flex justify-between items-start">
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-950 dark:text-white">
+                <div className="flex flex-col gap-1 2xl:gap-1.5 3xl:gap-2">
+                  <span className="text-[10px] 2xl:text-xs 3xl:text-sm font-black uppercase tracking-[0.4em] text-slate-950 dark:text-white transition-all duration-300">
                     Neural.Link
                   </span>
-                  <span className={`text-[8px] font-mono flex items-center gap-2 transition-colors duration-300 ${isBoosting ? "text-cyan-400 font-bold" : "text-zinc-500"
+
+                  <span className={`text-[8px] 2xl:text-[10px] 3xl:text-xs font-mono flex items-center gap-2 2xl:gap-2.5 transition-colors duration-300 ${isBoosting ? "text-cyan-400 font-bold" : "text-zinc-500"
                     }`}>
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isBoosting ? "bg-red-500" : "bg-cyan-400"}`}></span>
-                      <span className={`relative inline-flex rounded-full h-1.5 w-1.5 ${isBoosting ? "bg-red-600" : "bg-cyan-500"}`}></span>
+
+                    <span className="relative flex h-1.5 w-1.5 2xl:h-2 2xl:w-2">
+                      <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isBoosting ? "bg-red-500" : "bg-cyan-400"
+                        }`}></span>
+                      <span className={`relative inline-flex rounded-full h-1.5 w-1.5 2xl:h-2 2xl:w-2 ${isBoosting ? "bg-red-600" : "bg-cyan-500"
+                        }`}></span>
                     </span>
-                    {isBoosting ? "SYSTEM_BOOST_ACTIVE_099" : "STABLE_CONNECTION_001"}
+
+                    <span className="tracking-tight 2xl:tracking-normal">
+                      {isBoosting ? "SYSTEM_BOOST_ACTIVE_099" : "STABLE_CONNECTION_001"}
+                    </span>
                   </span>
                 </div>
-
                 <div className="flex flex-col items-end gap-1">
-                  <span className="text-[10px] font-black uppercase tracking-[0.4em] -mr-[0.4em] text-slate-950 dark:text-white">
+                  <span className="text-[10px] 2xl:text-xs 3xl:text-sm font-black uppercase tracking-[0.4em] -mr-[0.4em] text-slate-950 dark:text-white">
                     Protocol: Select
                   </span>
-                  <span className="text-[8px] font-mono text-zinc-500">
+                  <span className="text-[8px] 2xl:text-[10px] 3xl:text-xs font-mono text-zinc-500">
                     ACTIVE_MODE: {activeCompanion.id.toUpperCase()}
                   </span>
                 </div>
@@ -233,17 +239,17 @@ export default function Home() {
               <div className="flex-1 w-full" />
 
               <div className="w-full p-8 md:p-12 flex flex-col md:flex-row justify-between items-end gap-8">
-                <div className="w-full md:max-w-[320px] lg:max-w-[380px] space-y-5 pointer-events-auto">
-                  <div className="space-y-2">
-                    <h2 className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500">
+                <div className="w-full md:max-w-[320px] 2xl:max-w-[450px] 3xl:max-w-[550px] space-y-5 2xl:space-y-8 pointer-events-auto">
+                  <div className="space-y-2 2xl:space-y-4">
+                    <h2 className="text-[10px] md:text-xs 2xl:text-sm 3xl:text-base font-black uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500">
                       Select Interface
                     </h2>
-                    <div className="flex gap-2 w-full">
+                    <div className="flex gap-2 2xl:gap-4 w-full">
                       {companions.map((comp) => (
                         <button
                           key={comp.id}
                           onClick={() => setSelectedId(comp.id)}
-                          className="group relative flex-1 h-12 md:h-10 border border-zinc-200 dark:border-white/10 flex items-center justify-center transition-all overflow-hidden cursor-pointer"
+                          className="group relative flex-1 h-12 md:h-10 2xl:h-14 3xl:h-16 border border-zinc-200 dark:border-white/10 flex items-center justify-center transition-all overflow-hidden cursor-pointer"
                         >
                           <motion.div
                             className="absolute inset-0 bg-slate-950 dark:bg-white"
@@ -251,7 +257,7 @@ export default function Home() {
                             animate={{ y: selectedId === comp.id ? 0 : "100%" }}
                             transition={{ type: "spring", bounce: 0, duration: 0.4 }}
                           />
-                          <span className={`relative text-xs md:text-[10px] font-bold transition-colors duration-300 ${selectedId === comp.id ? "text-white dark:text-black" : "text-zinc-500"
+                          <span className={`relative text-xs md:text-[10px] 2xl:text-xs 3xl:text-sm font-bold transition-colors duration-300 ${selectedId === comp.id ? "text-white dark:text-black" : "text-zinc-500"
                             }`}>
                             0{companions.indexOf(comp) + 1}
                           </span>
@@ -259,7 +265,7 @@ export default function Home() {
                       ))}
                     </div>
                   </div>
-                  <p className="hidden sm:block text-[9px] md:text-[10px] font-mono text-zinc-500 leading-relaxed uppercase tracking-tight">
+                  <p className="hidden sm:block text-[9px] md:text-[10px] 2xl:text-xs font-mono text-zinc-500 uppercase tracking-tight">
                     Initialize synchronization to deploy the active entity into the workspace.
                   </p>
                 </div>
@@ -273,10 +279,10 @@ export default function Home() {
                       exit={{ opacity: 0, x: -20 }}
                       className="space-y-3 md:space-y-2"
                     >
-                      <h1 className="text-5xl md:text-6xl lg:text-7xl font-black italic tracking-tighter text-slate-950 dark:text-white uppercase leading-[0.8]">
+                      <h1 className="text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl 3xl:text-9xl font-black italic tracking-tighter text-slate-950 dark:text-white uppercase leading-[0.8]">
                         {activeCompanion.name}
                       </h1>
-                      <p className="text-xs md:text-[11px] lg:text-sm leading-relaxed text-zinc-500 dark:text-zinc-400 font-medium max-w-[400px] md:ml-auto">
+                      <p className="text-xs md:text-[11px] lg:text-sm 2xl:text-base leading-relaxed text-zinc-500 dark:text-zinc-400 font-medium max-w-[400px] 2xl:max-w-[500px] md:ml-auto">
                         {activeCompanion.bio}
                       </p>
                     </motion.div>

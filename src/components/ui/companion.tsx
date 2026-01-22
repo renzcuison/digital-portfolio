@@ -145,7 +145,7 @@ export default function Companion({ imagePath, isActive, setIsBoosting }: Compan
         <div className="fixed inset-0 z-0 flex items-center justify-center overflow-hidden bg-transparent pointer-events-none select-none" style={{ perspective: "1200px" }}>
             <motion.div
                 style={{ rotateX, rotateY, x: translateX, y: combinedY, scale: finalScale, transformStyle: "preserve-3d", pointerEvents: "auto", cursor: "pointer" }}
-                className="relative flex items-center justify-center w-full h-full max-w-[700px] -translate-y-19 md:translate-y-0"
+                className="relative flex items-center justify-center w-full h-full max-w-[700px] 2xl:max-w-[900px] 3xl:max-w-[1100px]  -translate-y-19 md:translate-y-0"
                 onMouseDown={() => {
                     setIsPressed(true);
                     setIsBoosting?.(true);
@@ -166,7 +166,7 @@ export default function Companion({ imagePath, isActive, setIsBoosting }: Compan
                         style={{ filter: glowFilter }}
                     >
                         <motion.div
-                            className="relative w-full h-full max-h-[45vh] md:max-h-[600px] p-4 md:p-12"
+                            className="relative w-full h-full max-h-[45vh] md:max-h-[60vh] 2xl:max-h-[70vh] p-4 md:p-12"
                             style={{
                                 WebkitMaskImage: `url("${imagePath}")`,
                                 maskImage: `url("${imagePath}")`,
