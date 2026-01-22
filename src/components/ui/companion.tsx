@@ -47,10 +47,9 @@ export default function Companion({ imagePath, isActive, setIsBoosting }: Compan
     const mouseX = useSpring(x, { stiffness: 200, damping: 30 });
     const mouseY = useSpring(y, { stiffness: 200, damping: 30 });
 
-    const combinedY = useTransform([mouseY, time], ([latestY, t]) => {
+    const combinedY = useTransform(mouseY, (latestY) => {
         const mouseShift = (latestY as number) * 60;
-        const autoFloat = Math.sin((t as number) * 2) * 20;
-        return mouseShift + autoFloat;
+        return mouseShift;
     });
 
     const translateX = useTransform(mouseX, [-0.5, 0.5], [-40, 40]);
