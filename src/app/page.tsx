@@ -7,7 +7,6 @@ import { Github, Mail, Linkedin, Check } from "lucide-react";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 
 const Companion = dynamic(() => import("@/components/ui/companion"), {
-  ssr: false,
   loading: () => <div className="fixed inset-0 bg-transparent" />
 });
 
@@ -18,8 +17,9 @@ export default function Home() {
   const [showPhrase, setShowPhrase] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedId, setSelectedId] = useState("mage");
+  const [isBoosting, setIsBoosting] = useState(false);
 
-  const phrase = "TUFF. I'M THAT DEV.";
+  const phrase = "NOTHING FANCY, REALLY";
 
   const companions = [
     {
@@ -73,23 +73,24 @@ export default function Home() {
     animate: { opacity: 1, y: 0 },
   };
 
+  const pulseClass = "animate-pulse text-cyan-500 dark:text-cyan-400";
+
   return (
     <main className="relative h-screen w-full bg-white dark:bg-black transition-colors duration-500 overflow-hidden">
 
-      {/* <div className="fixed inset-0 z-0">
-        <AnimatePresence mode="wait">
-          <Companion
-            key={selectedId}
-            imagePath={activeCompanion.path}
-            isActive={true}
-          />
-        </AnimatePresence>
-      </div> */}
+      {/* Background Companion Layer - Now correctly handled */}
+      <div className="fixed inset-0 z-0">
+        <Companion
+          imagePath={activeCompanion.path}
+          isActive={true}
+          setIsBoosting={setIsBoosting}
+        />
+      </div>
 
-      {/* main div */}
+      {/* UI Overlay */}
       <div className="absolute inset-0 z-[100] flex flex-col pointer-events-none">
 
-        {/* header start */}
+        {/* Header Section */}
         <header className="w-full px-6 py-3 flex items-center justify-between pointer-events-auto">
           <div
             className="flex items-center group cursor-default pointer-events-auto select-none"
@@ -194,7 +195,6 @@ export default function Home() {
             </div>
           </div>
         </header>
-        {/* header end */}
 
         <AnimatePresence>
           {!menuOpen && (
@@ -205,30 +205,33 @@ export default function Home() {
               transition={{ duration: 0.2 }}
               className="flex flex-col flex-1 w-full"
             >
-
-              {/* top content */}
               <div className="w-full px-8 md:px-12 mt-4 flex justify-between items-start">
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-1">
-                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-950 dark:text-white">Neural.Link</span>
-                  <span className="text-[8px] font-mono text-zinc-500">STABLE_CONNECTION_001</span>
-                </motion.div>
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-end gap-1">
-                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-950 dark:text-white">Protocol: Select</span>
-                  <span className="text-[8px] font-mono text-zinc-500">ACTIVE_MODE: COMPANION</span>
-                </motion.div>
-              </div>
-              {/* top content */}
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-950 dark:text-white">
+                    Neural.Link
+                  </span>
+                  <span className={`text-[8px] font-mono flex items-center gap-2 transition-colors duration-300 ${isBoosting ? "text-cyan-400 font-bold" : "text-zinc-500"
+                    }`}>
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isBoosting ? "bg-red-500" : "bg-cyan-400"}`}></span>
+                      <span className={`relative inline-flex rounded-full h-1.5 w-1.5 ${isBoosting ? "bg-red-600" : "bg-cyan-500"}`}></span>
+                    </span>
+                    {isBoosting ? "SYSTEM_BOOST_ACTIVE_099" : "STABLE_CONNECTION_001"}
+                  </span>
+                </div>
 
-              <div className="flex-1 w-full min-h-0 relative flex items-center justify-center
-              pointer-events-none pb-32 md:pb-0 [--offset:-40px] md:[--offset:0px]">
-                <Companion
-                  imagePath={activeCompanion.path}
-                  isActive={true}
-                />
+                <div className="flex flex-col items-end gap-1">
+                  <span className="text-[10px] font-black uppercase tracking-[0.4em] -mr-[0.4em] text-slate-950 dark:text-white">
+                    Protocol: Select
+                  </span>
+                  <span className="text-[8px] font-mono text-zinc-500">
+                    ACTIVE_MODE: {activeCompanion.id.toUpperCase()}
+                  </span>
+                </div>
               </div>
 
-              {/* bottom content */}
-              {/* left */}
+              <div className="flex-1 w-full" />
+
               <div className="w-full p-8 md:p-12 flex flex-col md:flex-row justify-between items-end gap-8">
                 <div className="w-full md:max-w-[320px] lg:max-w-[380px] space-y-5 pointer-events-auto">
                   <div className="space-y-2">
@@ -260,9 +263,7 @@ export default function Home() {
                     Initialize synchronization to deploy the active entity into the workspace.
                   </p>
                 </div>
-                {/* left */}
 
-                {/* right */}
                 <div className="w-full md:max-w-[350px] lg:max-w-[450px] text-left md:text-right pointer-events-auto">
                   <AnimatePresence mode="wait">
                     <motion.div
@@ -282,16 +283,11 @@ export default function Home() {
                   </AnimatePresence>
                 </div>
               </div>
-              {/* right */}
-              {/* bottom content */}
-
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-      {/* main div */}
 
-      {/* mobile menu start */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -348,8 +344,6 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
-      {/* mobile menu end */}
-
     </main>
   );
 }
