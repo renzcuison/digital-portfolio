@@ -123,20 +123,18 @@ export default function Companion({ imagePath, isActive, setIsBoosting }: Compan
             y.set(e.clientY / window.innerHeight - 0.5);
         };
 
-        const handleWheel = (e: WheelEvent) => {
-            const zoomStep = e.deltaY * -0.001;
-            const nextZoom = Math.min(Math.max(rawZoom.get() + zoomStep, 1.0), 1.35);
-            rawZoom.set(nextZoom);
-        };
-
         window.addEventListener("mousemove", handleMouseMove);
-        window.addEventListener("wheel", handleWheel, { passive: false });
 
         return () => {
             window.removeEventListener("mousemove", handleMouseMove);
-            window.removeEventListener("wheel", handleWheel);
         };
-    }, [x, y, rawZoom]);
+    }, [x, y]);
+
+    const handleLocalWheel = (e: React.WheelEvent) => {
+        const zoomStep = e.deltaY * -0.001;
+        const nextZoom = Math.min(Math.max(rawZoom.get() + zoomStep, 1.0), 1.35);
+        rawZoom.set(nextZoom);
+    };
 
     if (!mounted) return null;
 
@@ -154,8 +152,9 @@ export default function Companion({ imagePath, isActive, setIsBoosting }: Compan
     return (
         <div className="fixed inset-0 z-0 flex items-center justify-center overflow-hidden bg-transparent pointer-events-none select-none" style={{ perspective: "1200px" }}>
             <motion.div
+                onWheel={handleLocalWheel}
                 style={{ rotateX, rotateY, x: translateX, y: combinedY, scale: finalScale, transformStyle: "preserve-3d", pointerEvents: "auto", cursor: "pointer" }}
-                className="relative flex items-center justify-center w-full h-full max-w-[700px] 2xl:max-w-[900px] 3xl:max-w-[1100px]  -translate-y-19 md:translate-y-0 will-change-transform"
+                className="relative flex items-center justify-center w-full h-full max-w-[700px] 2xl:max-w-[900px] 3xl:max-w-[1100px] -translate-y-19 md:translate-y-0 will-change-transform"
                 onMouseDown={() => {
                     setIsPressed(true);
                     setIsBoosting?.(true);
