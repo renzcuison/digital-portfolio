@@ -19,9 +19,15 @@ export function Hero({ activeCompanion, selectedId, setSelectedId, isBoosting }:
                         Neural.Link
                     </span>
                     <span className={`text-[8px] 2xl:text-[10px] font-mono flex items-center gap-2 transition-colors duration-300 ${isBoosting ? "text-cyan-400 font-bold" : "text-zinc-500"}`}>
-                        <span className="relative flex h-1.5 w-1.5">
-                            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isBoosting ? "bg-red-500" : "bg-cyan-400"}`} />
-                            <span className={`relative inline-flex rounded-full h-1.5 w-1.5 ${isBoosting ? "bg-red-600" : "bg-cyan-500"}`} />
+                        <span className="relative flex h-2 w-2">
+                            {/* Outer Glow */}
+                            <span className={`absolute inline-flex h-full w-full rounded-full opacity-40 animate-ping ${isBoosting ? "bg-red-400" : "bg-cyan-400"
+                                }`} />
+                            {/* Inner Core */}
+                            <span className={`relative inline-flex rounded-full h-2 w-2 shadow-[0_0_10px_rgba(0,0,0,0.1)] ${isBoosting
+                                    ? "bg-red-500 shadow-red-500/50"
+                                    : "bg-cyan-500 shadow-cyan-500/50"
+                                }`} />
                         </span>
                         {isBoosting ? "SYSTEM_BOOST_ACTIVE_099" : "STABLE_CONNECTION_001"}
                     </span>
