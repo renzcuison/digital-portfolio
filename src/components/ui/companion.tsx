@@ -176,7 +176,7 @@ export default function Companion({ imagePath, isActive, setIsBoosting }: Compan
                         style={{ filter: glowFilter }}
                     >
                         <motion.div
-                            className="relative w-full h-full max-h-[45vh] md:max-h-[60vh] 2xl:max-h-[70vh] p-4 md:p-12"
+                            className="relative w-full h-full max-h-[45vh] md:max-h-[50vh] 2xl:max-h-[70vh] p-4 md:p-12"
                             style={{
                                 WebkitMaskImage: `url("${imagePath}")`,
                                 maskImage: `url("${imagePath}")`,

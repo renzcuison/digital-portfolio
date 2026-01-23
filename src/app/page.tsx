@@ -78,7 +78,7 @@ export default function Home() {
   return (
     <main className="relative h-screen w-full bg-white dark:bg-black transition-colors duration-500 overflow-hidden">
 
-      {/* Background Companion Layer - Now correctly handled */}
+      {/* center object */}
       <div className="fixed inset-0 z-0">
         <Companion
           imagePath={activeCompanion.path}
@@ -86,11 +86,11 @@ export default function Home() {
           setIsBoosting={setIsBoosting}
         />
       </div>
+      {/* center object end */}
 
-      {/* UI Overlay */}
       <div className="absolute inset-0 z-[100] flex flex-col pointer-events-none">
 
-        {/* Header Section */}
+        {/* header */}
         <header className="w-full px-6 py-3 flex items-center justify-between pointer-events-auto">
           <div
             className="flex items-center group cursor-default pointer-events-auto select-none"
@@ -195,6 +195,7 @@ export default function Home() {
             </div>
           </div>
         </header>
+        {/* header end */}
 
         <AnimatePresence>
           {!menuOpen && (
@@ -293,6 +294,25 @@ export default function Home() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* <section className="relative w-full min-h-[60vh] flex flex-col justify-center py-20 px-6 md:px-12 lg:px-24">
+        <div className="max-w-[1800px] mx-auto w-full">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl 3xl:text-9xl font-black tracking-tighter text-slate-950 dark:text-white uppercase leading-[0.8] mb-[-0.02em]">
+              About me
+            </h1>
+
+            <p className="text-xs md:text-[11px] lg:text-sm 2xl:text-base leading-relaxed text-zinc-500 dark:text-zinc-400 font-medium max-w-[400px] 2xl:max-w-[500px] md:text-right">
+              Logically Sound. Mentally Questionable. Fullstack Developer.
+              Spending 4 hours automating a task that takes 30 seconds is my personal brand.
+              Expert in coding, mediocre at coding. I don't read the documentation;
+              I am the documentation. Let's build anything now, to be honest.
+            </p>
+          </div>
+
+          <div className="w-full h-[1px] bg-slate-200 dark:bg-zinc-800 mt-12 md:mt-20 opacity-50" />
+        </div>
+      </section> */}
 
       <AnimatePresence>
         {menuOpen && (
