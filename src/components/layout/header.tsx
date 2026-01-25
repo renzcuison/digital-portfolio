@@ -29,9 +29,9 @@ export function Header({ menuOpen, setMenuOpen, copied, onCopyEmail }: HeaderPro
 
     return (
         <header className="w-full px-6 py-3 flex items-center justify-between pointer-events-auto relative z-[250]">
-            {/* RC Logo Container - Fades out when menu is open */}
+            {/* RC Logo Container - Instant disappear, no layout shift */}
             <div
-                className={`flex items-center group cursor-default pointer-events-auto select-none transition-all duration-300 ${menuOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+                className={`flex items-center group cursor-default pointer-events-auto select-none ${menuOpen ? "invisible pointer-events-none" : "visible"
                     }`}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}

@@ -32,6 +32,8 @@ export default function Home() {
         ) : (
           <motion.div key="main-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative h-full w-full">
 
+            <div className="absolute inset-0 z-0 pointer-events-none text-black/10 dark:text-white/10" />
+
             <div className="absolute top-0 left-0 w-full h-screen z-[105] flex items-center justify-center pointer-events-none">
               <div
                 className="md:hidden w-[250px] h-[250px] pointer-events-auto rounded-full absolute"
@@ -49,7 +51,6 @@ export default function Home() {
                   mouseRawY={mouseRawY}
                   onStartHold={startHold}
                   onStopHold={stopHold}
-
                 />
               </div>
             </div>
