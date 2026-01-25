@@ -31,10 +31,6 @@ export default function Home() {
         ) : (
           <motion.div key="main-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative h-full w-full">
 
-            <div className="fixed top-0 left-0 w-full z-[300] pointer-events-none">
-              <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} copied={copied} onCopyEmail={copyEmail} />
-            </div>
-
             <div className="fixed inset-0 z-[105] flex items-center justify-center pointer-events-none">
               <div
                 className="w-full max-w-[700px] h-[50vh] pointer-events-auto cursor-crosshair"
@@ -56,6 +52,11 @@ export default function Home() {
                 )}
               </AnimatePresence>
             </div>
+
+            <div className="fixed top-0 left-0 w-full z-[300] pointer-events-none">
+              <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} copied={copied} onCopyEmail={copyEmail} />
+            </div>
+
           </motion.div>
         )}
       </AnimatePresence>
