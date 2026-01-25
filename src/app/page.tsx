@@ -23,32 +23,13 @@ export default function Home() {
     mouseRawX, mouseRawY, isMobile
   } = usePortfolioLogic();
 
-  React.useEffect(() => {
-    if (!mounted) return;
-
-    const updateThemeColor = () => {
-      const themeColor = document.querySelector('meta[name="theme-color"]');
-      if (themeColor) {
-        const isDark = document.documentElement.classList.contains('dark');
-        themeColor.setAttribute('content', isDark ? '#000000' : '#ffffff');
-      }
-    };
-
-    updateThemeColor();
-
-    const observer = new MutationObserver(updateThemeColor);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    return () => observer.disconnect();
-  }, [mounted]);
+  // REMOVED: The manual MutationObserver block that was here.
 
   if (!mounted) return <div className="h-screen bg-white dark:bg-black" />;
 
   return (
     <main className="relative min-h-screen w-full bg-white dark:bg-black transition-colors duration-500 overflow-x-hidden">
+      {/* This component will now be the ONLY thing controlling the notch */}
       <ThemeSync />
 
       <AnimatePresence mode="wait">
@@ -56,7 +37,6 @@ export default function Home() {
           <LoadingScreen key="loader" />
         ) : (
           <motion.div key="main-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative h-full w-full">
-
             <div className="fixed inset-0 z-0 pointer-events-none text-black/10 dark:text-white/10" />
 
             <div className="absolute top-0 left-0 w-full h-screen z-[105] flex items-center justify-center pointer-events-none">
@@ -98,7 +78,6 @@ export default function Home() {
             <div className="fixed top-0 left-0 w-full z-[300] pointer-events-none pt-[env(safe-area-inset-top)]">
               <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} copied={copied} onCopyEmail={copyEmail} />
             </div>
-
           </motion.div>
         )}
       </AnimatePresence>
