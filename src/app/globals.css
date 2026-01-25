@@ -119,12 +119,18 @@
   html {
     cursor: auto;
     color-scheme: light dark;
+    background-color: #ffffff;
+    transition: background-color 0.5s ease;
+  }
+
+  html.dark {
+    background-color: #000000;
   }
 
   body {
     cursor: auto !important;
     @apply bg-background text-foreground;
-    background-color: hsl(var(--background));
+    min-height: 100vh;
   }
 
   * {

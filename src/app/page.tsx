@@ -9,7 +9,6 @@ import { LoadingScreen } from "@/components/ui/loading-screen";
 import { SyncStatus } from "@/components/ui/sync-status";
 import { MobileMenu } from "@/components/layout/mobile-menu";
 import { usePortfolioLogic } from "@/hooks/use-portfolio-logic";
-import { ThemeSync } from "@/components/ui/theme-sync";
 
 const Companion = dynamic(() => import("@/components/ui/companion"), {
   loading: () => <div className="fixed inset-0 bg-transparent" />,
@@ -23,20 +22,17 @@ export default function Home() {
     mouseRawX, mouseRawY, isMobile
   } = usePortfolioLogic();
 
-  // REMOVED: The manual MutationObserver block that was here.
-
   if (!mounted) return <div className="h-screen bg-white dark:bg-black" />;
 
   return (
-    <main className="relative min-h-screen w-full bg-white dark:bg-black transition-colors duration-500 overflow-x-hidden">
-      {/* This component will now be the ONLY thing controlling the notch */}
-      <ThemeSync />
+    <main className="relative min-h-screen w-full bg-transparent transition-colors duration-500 overflow-x-hidden">
 
       <AnimatePresence mode="wait">
         {!isReady ? (
           <LoadingScreen key="loader" />
         ) : (
           <motion.div key="main-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative h-full w-full">
+
             <div className="fixed inset-0 z-0 pointer-events-none text-black/10 dark:text-white/10" />
 
             <div className="absolute top-0 left-0 w-full h-screen z-[105] flex items-center justify-center pointer-events-none">
@@ -78,6 +74,7 @@ export default function Home() {
             <div className="fixed top-0 left-0 w-full z-[300] pointer-events-none pt-[env(safe-area-inset-top)]">
               <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} copied={copied} onCopyEmail={copyEmail} />
             </div>
+
           </motion.div>
         )}
       </AnimatePresence>
