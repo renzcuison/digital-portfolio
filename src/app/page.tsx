@@ -17,43 +17,54 @@ const Companion = dynamic(() => import("@/components/ui/companion"), {
 export default function Home() {
   const {
     mounted, copied, menuOpen, setMenuOpen, activeCompanion,
-    selectedId, setSelectedId, isBoosting, setIsBoosting,
-    copyEmail, isReady, holdProgress, isCurrentSynced, startHold, stopHold
+    selectedId, setSelectedId, isBoosting,
+    copyEmail, isReady, holdProgress, isCurrentSynced, startHold, stopHold,
+    mouseRawX, mouseRawY, isMobile
   } = usePortfolioLogic();
 
   if (!mounted) return <div className="h-screen bg-white dark:bg-black" />;
 
   return (
-    <main className="relative h-screen w-full bg-white dark:bg-black transition-colors duration-500 overflow-hidden">
+    <main className="relative min-h-screen w-full bg-white dark:bg-black transition-colors duration-500">
       <AnimatePresence mode="wait">
         {!isReady ? (
           <LoadingScreen key="loader" />
         ) : (
           <motion.div key="main-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative h-full w-full">
 
-            <div className="fixed inset-0 z-[105] flex items-center justify-center pointer-events-none">
+            <div className="absolute top-0 left-0 w-full h-screen z-[105] flex items-center justify-center pointer-events-none">
               <div
-                className="w-full max-w-[700px] h-[50vh] pointer-events-auto cursor-crosshair"
-                onMouseDown={startHold}
-                onMouseUp={stopHold}
-                onMouseLeave={stopHold}
-              >
+                className="md:hidden w-[250px] h-[250px] pointer-events-auto rounded-full absolute"
+                onTouchStart={startHold}
+                onTouchEnd={stopHold}
+              />
+
+              <div className="w-full max-w-[700px] h-[50vh] flex items-center justify-center pointer-events-none md:pointer-events-auto cursor-crosshair">
                 <Companion
                   imagePath={activeCompanion.path}
                   isActive={true}
-                  setIsBoosting={setIsBoosting}
+                  isBoosting={isBoosting}
+                  isMobile={isMobile}
+                  mouseRawX={mouseRawX}
+                  mouseRawY={mouseRawY}
                   onStartHold={startHold}
                   onStopHold={stopHold}
+
                 />
               </div>
             </div>
 
             <SyncStatus holdProgress={holdProgress} isCurrentSynced={isCurrentSynced} show={!menuOpen} />
 
-            <div className="absolute inset-0 z-[100] flex flex-col pt-16 pointer-events-none">
+            <div className="relative min-h-screen z-[100] flex flex-col pt-16 pointer-events-none">
               <AnimatePresence mode="wait">
                 {!menuOpen && (
-                  <Hero activeCompanion={activeCompanion} selectedId={selectedId} setSelectedId={setSelectedId} isBoosting={isBoosting} />
+                  <Hero
+                    activeCompanion={activeCompanion}
+                    selectedId={selectedId}
+                    setSelectedId={setSelectedId}
+                    isBoosting={isBoosting}
+                  />
                 )}
               </AnimatePresence>
             </div>
