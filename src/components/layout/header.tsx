@@ -28,9 +28,11 @@ export function Header({ menuOpen, setMenuOpen, copied, onCopyEmail }: HeaderPro
     }, [isHovered]);
 
     return (
-        <header className="w-full px-6 py-3 flex items-center justify-between pointer-events-auto">
+        <header className="w-full px-6 py-3 flex items-center justify-between pointer-events-auto relative z-[250]">
+            {/* RC Logo Container - Fades out when menu is open */}
             <div
-                className="flex items-center group cursor-default pointer-events-auto select-none"
+                className={`flex items-center group cursor-default pointer-events-auto select-none transition-all duration-300 ${menuOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+                    }`}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 onClick={() => setIsHovered(!isHovered)}
@@ -91,10 +93,10 @@ export function Header({ menuOpen, setMenuOpen, copied, onCopyEmail }: HeaderPro
 
             <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="md:hidden relative z-[110] w-10 h-10 flex flex-col items-end justify-center gap-1.5 focus:outline-none"
+                className="md:hidden relative z-[210] w-10 h-10 flex flex-col items-end justify-center gap-1.5 focus:outline-none"
             >
-                <motion.span animate={menuOpen ? { rotate: 45, y: 4.5 } : { rotate: 0, y: 0 }} className="h-[1.2px] w-5 bg-slate-950 dark:bg-white block origin-center transition-colors" />
-                <motion.span animate={menuOpen ? { rotate: -45, y: -4.5 } : { rotate: 0, y: 0 }} className="h-[1.2px] w-5 bg-slate-950 dark:bg-white block origin-center transition-colors" />
+                <motion.span animate={menuOpen ? { rotate: 45, y: 4 } : { rotate: 0, y: 0 }} className="h-[1.2px] w-5 bg-slate-950 dark:bg-white block origin-center transition-colors" />
+                <motion.span animate={menuOpen ? { rotate: -45, y: -4 } : { rotate: 0, y: 0 }} className="h-[1.2px] w-5 bg-slate-950 dark:bg-white block origin-center transition-colors" />
             </button>
         </header>
     );

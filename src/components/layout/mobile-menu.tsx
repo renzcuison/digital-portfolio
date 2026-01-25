@@ -1,14 +1,16 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { SITE_CONFIG } from "@/lib/constants";
 import { ModeToggle } from "@/components/ui/mode-toggle";
+import { X } from "lucide-react";
 
 interface MobileMenuProps {
     isOpen: boolean;
+    setIsOpen: (open: boolean) => void;
     copied: boolean;
     onCopyEmail: () => void;
 }
 
-export function MobileMenu({ isOpen, copied, onCopyEmail }: MobileMenuProps) {
+export function MobileMenu({ isOpen, setIsOpen, copied, onCopyEmail }: MobileMenuProps) {
     return (
         <AnimatePresence>
             {isOpen && (
@@ -16,8 +18,9 @@ export function MobileMenu({ isOpen, copied, onCopyEmail }: MobileMenuProps) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 bg-white/40 dark:bg-black/40 backdrop-blur-3xl z-[200] md:hidden"
+                    className="fixed inset-0 bg-white/60 dark:bg-black/60 backdrop-blur-3xl z-[200] md:hidden"
                 >
+
                     <nav className="flex flex-col justify-center h-full px-12 gap-12 pointer-events-auto">
                         <div className="flex flex-col gap-10">
                             <MobileNavLink href={SITE_CONFIG.links.github} delay={0.1}>GitHub</MobileNavLink>
@@ -29,6 +32,7 @@ export function MobileMenu({ isOpen, copied, onCopyEmail }: MobileMenuProps) {
                                 </span>
                             </button>
                         </div>
+
                         <div className="flex items-center justify-between pt-12 border-t border-slate-200 dark:border-zinc-800">
                             <span className="text-[10px] uppercase tracking-[0.4em] text-slate-400 dark:text-zinc-600 font-bold">Appearance</span>
                             <ModeToggle />

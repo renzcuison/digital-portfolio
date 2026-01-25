@@ -32,7 +32,7 @@ export function Hero({ activeCompanion, selectedId, setSelectedId, isBoosting }:
                 </div>
 
                 <div className="flex flex-col items-end gap-1">
-                    <span className="text-[10px] 2xl:text-xs font-black uppercase tracking-[0.4em] text-slate-950 dark:text-white">
+                    <span className="text-[10px] 2xl:text-xs font-black uppercase tracking-[0.4em] text-slate-950 dark:text-white -mr-[0.4em]">
                         Protocol: Select
                     </span>
                     <span className="text-[8px] 2xl:text-[10px] font-mono text-zinc-500">

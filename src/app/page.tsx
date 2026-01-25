@@ -31,6 +31,10 @@ export default function Home() {
         ) : (
           <motion.div key="main-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative h-full w-full">
 
+            <div className="fixed top-0 left-0 w-full z-[300] pointer-events-none">
+              <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} copied={copied} onCopyEmail={copyEmail} />
+            </div>
+
             <div className="fixed inset-0 z-[105] flex items-center justify-center pointer-events-none">
               <div
                 className="w-full max-w-[700px] h-[50vh] pointer-events-auto cursor-crosshair"
@@ -45,8 +49,7 @@ export default function Home() {
 
             <SyncStatus holdProgress={holdProgress} isCurrentSynced={isCurrentSynced} show={!menuOpen} />
 
-            <div className="absolute inset-0 z-[100] flex flex-col pointer-events-none">
-              <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} copied={copied} onCopyEmail={copyEmail} />
+            <div className="absolute inset-0 z-[100] flex flex-col pt-16 pointer-events-none">
               <AnimatePresence mode="wait">
                 {!menuOpen && (
                   <Hero activeCompanion={activeCompanion} selectedId={selectedId} setSelectedId={setSelectedId} isBoosting={isBoosting} />
@@ -57,7 +60,12 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      <MobileMenu isOpen={menuOpen} copied={copied} onCopyEmail={copyEmail} />
+      <MobileMenu
+        isOpen={menuOpen}
+        setIsOpen={setMenuOpen}
+        copied={copied}
+        onCopyEmail={copyEmail}
+      />
     </main>
   );
 }
