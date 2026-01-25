@@ -118,11 +118,13 @@
 @layer base {
   html {
     cursor: auto;
+    color-scheme: light dark;
   }
 
   body {
     cursor: auto !important;
     @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
   }
 
   * {

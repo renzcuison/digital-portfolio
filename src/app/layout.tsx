@@ -57,7 +57,7 @@ export default function RootLayout({
           type="image/png"
         />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-cyan-500/30`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-cyan-500/30 bg-white dark:bg-black`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
