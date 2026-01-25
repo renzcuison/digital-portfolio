@@ -20,6 +20,7 @@ export default function Companion({
 }: CompanionProps) {
     const { theme } = useTheme();
     const [mounted, setMounted] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
     const [isPressed, setIsPressed] = useState(false);
     const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -76,11 +77,14 @@ export default function Companion({
 
     useAnimationFrame((t, delta) => {
         if (!isActive || !imageLoaded) return;
+
         const seconds = t / 1000;
         time.set(seconds);
+
         if (winWidthRef.current < 768) return;
 
         const speed = (0.0075 * (1 + boostProgress.get() * 2.5)) * delta;
+
         positionRef.current.x += speed;
         positionRef.current.y += speed * 0.4;
 
@@ -105,11 +109,21 @@ export default function Companion({
 
     useEffect(() => {
         setMounted(true);
-        const handleResize = () => { winWidthRef.current = window.innerWidth; };
+
+        const handleResize = () => {
+            winWidthRef.current = window.innerWidth;
+            setIsMobile(window.innerWidth < 768);
+        };
+
+        handleResize();
+
         const handleMouseMove = (e: MouseEvent) => {
+            if (window.innerWidth < 768) return;
+
             x.set(e.clientX / window.innerWidth - 0.5);
             y.set(e.clientY / window.innerHeight - 0.5);
         };
+
         window.addEventListener("mousemove", handleMouseMove);
         window.addEventListener("resize", handleResize);
         return () => {
@@ -155,12 +169,13 @@ export default function Companion({
                     rawZoom.set(next);
                 }}
                 style={{
-                    rotateX: rotateX,
-                    rotateY: rotateY,
+                    rotateX: winWidthRef.current < 768 ? 0 : rotateX,
+                    rotateY: winWidthRef.current < 768 ? 0 : rotateY,
                     x: translateX,
                     y: combinedY,
                     scale: finalScale,
                     transformStyle: "preserve-3d",
+
                 }}
                 className="relative flex items-center justify-center w-full h-full max-w-[700px] 2xl:max-w-[900px] 3xl:max-w-[1100px] -translate-y-19 md:translate-y-0 will-change-transform pointer-events-none"
             >
@@ -193,10 +208,11 @@ export default function Companion({
                                 }
                             }}
                             style={{
-                                filter:
-                                    theme === "dark"
+                                filter: winWidthRef.current < 768
+                                    ? "none"
+                                    : (theme === "dark"
                                         ? "brightness(1.5) drop-shadow(0 0 3px rgba(255,255,255,0.7))"
-                                        : "brightness(1.0) saturate(1.2) drop-shadow(0 0 2px rgba(0,0,0,0.15))"
+                                        : "brightness(1.0) saturate(1.2) drop-shadow(0 0 2px rgba(0,0,0,0.15))")
                             }}
                         >
                             <motion.div
@@ -210,19 +226,30 @@ export default function Companion({
                                     WebkitMaskPosition: "center",
                                 }}
                             >
-                                <motion.div className="absolute inset-0 opacity-40" style={{ background: rgbBackground as any, backgroundSize: "14px 14px", WebkitMaskImage: `radial-gradient(1px 1px at 50% 50%, ${dotColor} 90%, transparent 100%)`, WebkitMaskSize: `7px 7px`, WebkitMaskPosition: posLayer4 as any, transform: "rotate(10deg) scale(1.5)" }} />
-                                <motion.div className="absolute inset-0 opacity-50" style={{
-                                    background: rgbBackground as any, backgroundSize: "46px 46px", WebkitMaskImage: `radial-gradient(var(--bw) var(--bh) at 50% 50%, ${dotColor} 70%, transparent 100%)`, WebkitMaskSize: `23px 23px`, WebkitMaskPosition: posLayer3 as any, // @ts-ignore
-                                    "--bw": blobW, "--bh": blobH, transform: "rotate(45deg) scale(1.6)"
-                                }} />
                                 <motion.div className="absolute inset-0 opacity-95" style={{
-                                    background: rgbBackground as any, backgroundSize: "22px 22px", WebkitMaskImage: `radial-gradient(var(--dw) var(--dh) at 50% 50%, ${dotColor} 85%, transparent 105%)`, WebkitMaskSize: `11px 11px`, WebkitMaskPosition: posLayer1 as any, // @ts-ignore
-                                    "--dw": dwStr, "--dh": dhStr, transform: "rotate(-12deg) scale(1.5)"
+                                    background: rgbBackground as any,
+                                    backgroundSize: "22px 22px",
+                                    WebkitMaskImage: `radial-gradient(var(--dw) var(--dh) at 50% 50%, ${dotColor} 85%, transparent 105%)`,
+                                    WebkitMaskSize: `11px 11px`,
+                                    WebkitMaskPosition: posLayer1 as any,
+                                    // @ts-ignore
+                                    "--dw": dwStr, "--dh": dhStr,
+                                    transform: "rotate(-12deg) scale(1.5)"
                                 }} />
-                                <motion.div className="absolute inset-0 opacity-80" style={{
-                                    background: rgbBackground as any, backgroundSize: "28px 28px", WebkitMaskImage: `radial-gradient(var(--dh) var(--dw) at 30% 70%, ${dotColor} 80%, transparent 100%)`, WebkitMaskSize: `14px 14px`, WebkitMaskPosition: posLayer2 as any, // @ts-ignore
-                                    "--dw": dwStr, "--dh": dhStr, transform: "rotate(18deg) scale(1.5)"
-                                }} />
+
+                                {winWidthRef.current >= 768 && (
+                                    <>
+                                        <motion.div className="absolute inset-0 opacity-40" style={{ background: rgbBackground as any, backgroundSize: "14px 14px", WebkitMaskImage: `radial-gradient(1px 1px at 50% 50%, ${dotColor} 90%, transparent 100%)`, WebkitMaskSize: `7px 7px`, WebkitMaskPosition: posLayer4 as any, transform: "rotate(10deg) scale(1.5)" }} />
+                                        <motion.div className="absolute inset-0 opacity-50" style={{
+                                            background: rgbBackground as any, backgroundSize: "46px 46px", WebkitMaskImage: `radial-gradient(var(--bw) var(--bh) at 50% 50%, ${dotColor} 70%, transparent 100%)`, WebkitMaskSize: `23px 23px`, WebkitMaskPosition: posLayer3 as any, // @ts-ignore
+                                            "--bw": blobW, "--bh": blobH, transform: "rotate(45deg) scale(1.6)"
+                                        }} />
+                                        <motion.div className="absolute inset-0 opacity-80" style={{
+                                            background: rgbBackground as any, backgroundSize: "28px 28px", WebkitMaskImage: `radial-gradient(var(--dh) var(--dw) at 30% 70%, ${dotColor} 80%, transparent 100%)`, WebkitMaskSize: `14px 14px`, WebkitMaskPosition: posLayer2 as any, // @ts-ignore
+                                            "--dw": dwStr, "--dh": dhStr, transform: "rotate(18deg) scale(1.5)"
+                                        }} />
+                                    </>
+                                )}
                             </motion.div>
                         </motion.div>
                     )}
