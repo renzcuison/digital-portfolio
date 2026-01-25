@@ -22,6 +22,28 @@ export default function Home() {
     mouseRawX, mouseRawY, isMobile
   } = usePortfolioLogic();
 
+  React.useEffect(() => {
+    if (!mounted) return;
+
+    const updateThemeColor = () => {
+      const themeColor = document.querySelector('meta[name="theme-color"]');
+      if (themeColor) {
+        const isDark = document.documentElement.classList.contains('dark');
+        themeColor.setAttribute('content', isDark ? '#000000' : '#ffffff');
+      }
+    };
+
+    updateThemeColor();
+
+    const observer = new MutationObserver(updateThemeColor);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, [mounted]);
+
   if (!mounted) return <div className="h-screen bg-white dark:bg-black" />;
 
   return (
