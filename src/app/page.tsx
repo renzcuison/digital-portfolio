@@ -9,6 +9,7 @@ import { LoadingScreen } from "@/components/ui/loading-screen";
 import { SyncStatus } from "@/components/ui/sync-status";
 import { MobileMenu } from "@/components/layout/mobile-menu";
 import { usePortfolioLogic } from "@/hooks/use-portfolio-logic";
+import { ThemeSync } from "@/components/ui/theme-sync";
 
 const Companion = dynamic(() => import("@/components/ui/companion"), {
   loading: () => <div className="fixed inset-0 bg-transparent" />,
@@ -48,6 +49,7 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen w-full bg-white dark:bg-black transition-colors duration-500 overflow-x-hidden">
+      <ThemeSync />
 
       <AnimatePresence mode="wait">
         {!isReady ? (
