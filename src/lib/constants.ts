@@ -1,5 +1,3 @@
-// src/lib/constants.ts
-
 export const COMPANIONS = [
   {
     id: "mage",

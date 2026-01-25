@@ -37,6 +37,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link
+          rel="preload"
+          href="/frieren.png"
+          as="image"
+          type="image/png"
+        />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-cyan-500/30`}>
         <ThemeProvider
           attribute="class"

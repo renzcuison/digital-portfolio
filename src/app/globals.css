@@ -116,10 +116,17 @@
 }
 
 @layer base {
+  html {
+    cursor: auto;
+  }
+
+  body {
+    cursor: auto !important;
+    @apply bg-background text-foreground;
+  }
+
   * {
     @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
+    cursor: auto;
   }
 }

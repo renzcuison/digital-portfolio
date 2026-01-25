@@ -1,4 +1,3 @@
-// src/hooks/use-portfolio-logic.ts
 import { useState, useEffect } from "react";
 import { SITE_CONFIG, CompanionId, COMPANIONS } from "@/lib/constants";
 
