@@ -25,7 +25,7 @@ export default function Home() {
   if (!mounted) return <div className="h-screen bg-white dark:bg-black" />;
 
   return (
-    <main className="relative min-h-screen w-full bg-white dark:bg-black transition-colors duration-500">
+    <main className="relative min-h-[100dvh] w-full bg-white dark:bg-black transition-colors duration-500 overflow-x-hidden">
       <AnimatePresence mode="wait">
         {!isReady ? (
           <LoadingScreen key="loader" />
@@ -69,7 +69,7 @@ export default function Home() {
               </AnimatePresence>
             </div>
 
-            <div className="fixed top-0 left-0 w-full z-[300] pointer-events-none">
+            <div className="fixed top-0 left-0 w-full z-[300] pointer-events-none pt-[env(safe-area-inset-top)]">
               <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} copied={copied} onCopyEmail={copyEmail} />
             </div>
 
