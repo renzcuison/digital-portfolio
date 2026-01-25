@@ -34,11 +34,16 @@ export default function Home() {
             <div className="fixed inset-0 z-[105] flex items-center justify-center pointer-events-none">
               <div
                 className="w-full max-w-[700px] h-[50vh] pointer-events-auto cursor-crosshair"
-                onMouseDown={startHold} onMouseUp={stopHold} onMouseLeave={stopHold}
+                onMouseDown={startHold}
+                onMouseUp={stopHold}
+                onMouseLeave={stopHold}
               >
                 <Companion
-                  imagePath={activeCompanion.path} isActive={true}
-                  setIsBoosting={setIsBoosting} onStartHold={startHold} onStopHold={stopHold}
+                  imagePath={activeCompanion.path}
+                  isActive={true}
+                  setIsBoosting={setIsBoosting}
+                  onStartHold={startHold}
+                  onStopHold={stopHold}
                 />
               </div>
             </div>
