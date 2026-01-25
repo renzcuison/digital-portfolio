@@ -120,6 +120,7 @@
     height: -webkit-fill-available;
     color-scheme: light dark;
     background-color: #ffffff;
+    overscroll-behavior: none;
   }
 
   html.dark {
