@@ -25,14 +25,15 @@ export default function Home() {
   if (!mounted) return <div className="h-screen bg-white dark:bg-black" />;
 
   return (
-    <main className="relative min-h-[100dvh] w-full bg-white dark:bg-black transition-colors duration-500 overflow-x-hidden">
+    <main className="relative min-h-screen w-full bg-white dark:bg-black transition-colors duration-500 overflow-x-hidden">
+
       <AnimatePresence mode="wait">
         {!isReady ? (
           <LoadingScreen key="loader" />
         ) : (
           <motion.div key="main-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative h-full w-full">
 
-            <div className="absolute inset-0 z-0 pointer-events-none text-black/10 dark:text-white/10" />
+            <div className="fixed inset-0 z-0 pointer-events-none text-black/10 dark:text-white/10" />
 
             <div className="absolute top-0 left-0 w-full h-screen z-[105] flex items-center justify-center pointer-events-none">
               <div
