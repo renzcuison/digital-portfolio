@@ -83,7 +83,7 @@ export function AboutBanner() {
                 {/* image start */}
                 <div className="w-full flex flex-row md:contents items-center justify-center md:justify-start gap-6 md:gap-10">
                     <div className="relative shrink-0 flex items-center justify-center [perspective:1000px]">
-                        <div className="relative w-82 h-82 md:w-64 md:h-80 rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden border border-zinc-200 dark:border-white/10 bg-black shadow-2xl">
+                        <div className="relative w-40 h-52 md:w-64 md:h-80 rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden border border-zinc-200 dark:border-white/10 bg-black shadow-2xl">
 
                             <motion.div
                                 animate={{
