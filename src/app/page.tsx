@@ -9,6 +9,7 @@ import { LoadingScreen } from "@/components/ui/loading-screen";
 import { SyncStatus } from "@/components/ui/sync-status";
 import { MobileMenu } from "@/components/layout/mobile-menu";
 import { usePortfolioLogic } from "@/hooks/use-portfolio-logic";
+import { AboutBanner } from "@/components/layout/about-banner";
 
 const Companion = dynamic(() => import("@/components/ui/companion"), {
   loading: () => <div className="fixed inset-0 bg-transparent" />,
@@ -35,41 +36,45 @@ export default function Home() {
 
             <div className="fixed inset-0 z-0 pointer-events-none text-black/10 dark:text-white/10" />
 
-            <div className="absolute top-0 left-0 w-full h-screen z-[105] flex items-center justify-center pointer-events-none">
-              <div
-                className="md:hidden w-[250px] h-[250px] pointer-events-auto rounded-full absolute"
-                onTouchStart={startHold}
-                onTouchEnd={stopHold}
-              />
-
-              <div className="w-full max-w-[700px] h-[50vh] flex items-center justify-center pointer-events-none md:pointer-events-auto cursor-crosshair">
-                <Companion
-                  imagePath={activeCompanion.path}
-                  isActive={true}
-                  isBoosting={isBoosting}
-                  isMobile={isMobile}
-                  mouseRawX={mouseRawX}
-                  mouseRawY={mouseRawY}
-                  onStartHold={startHold}
-                  onStopHold={stopHold}
+            <div className="relative h-screen w-full overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-full z-[105] flex items-center justify-center pointer-events-none">
+                <div
+                  className="md:hidden w-[250px] h-[250px] pointer-events-auto rounded-full absolute"
+                  onTouchStart={startHold}
+                  onTouchEnd={stopHold}
                 />
+
+                <div className="w-full max-w-[700px] h-[50vh] flex items-center justify-center pointer-events-none md:pointer-events-auto cursor-crosshair">
+                  <Companion
+                    imagePath={activeCompanion.path}
+                    isActive={true}
+                    isBoosting={isBoosting}
+                    isMobile={isMobile}
+                    mouseRawX={mouseRawX}
+                    mouseRawY={mouseRawY}
+                    onStartHold={startHold}
+                    onStopHold={stopHold}
+                  />
+                </div>
+              </div>
+
+              <SyncStatus holdProgress={holdProgress} isCurrentSynced={isCurrentSynced} show={!menuOpen} />
+
+              <div className="relative h-full z-[100] flex flex-col pt-16 pointer-events-none">
+                <AnimatePresence mode="wait">
+                  {!menuOpen && (
+                    <Hero
+                      activeCompanion={activeCompanion}
+                      selectedId={selectedId}
+                      setSelectedId={setSelectedId}
+                      isBoosting={isBoosting}
+                    />
+                  )}
+                </AnimatePresence>
               </div>
             </div>
 
-            <SyncStatus holdProgress={holdProgress} isCurrentSynced={isCurrentSynced} show={!menuOpen} />
-
-            <div className="relative min-h-screen z-[100] flex flex-col pt-16 pointer-events-none">
-              <AnimatePresence mode="wait">
-                {!menuOpen && (
-                  <Hero
-                    activeCompanion={activeCompanion}
-                    selectedId={selectedId}
-                    setSelectedId={setSelectedId}
-                    isBoosting={isBoosting}
-                  />
-                )}
-              </AnimatePresence>
-            </div>
+            <AboutBanner />
 
             <div className="fixed top-0 left-0 w-full z-[300] pointer-events-none pt-[env(safe-area-inset-top)] bg-transparent">
               <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} copied={copied} onCopyEmail={copyEmail} />

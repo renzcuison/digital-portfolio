@@ -1,12 +1,14 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface SyncStatusProps {
     holdProgress: number;
     isCurrentSynced: boolean;
     show: boolean;
+    className?: string;
 }
 
-export function SyncStatus({ holdProgress, isCurrentSynced, show }: SyncStatusProps) {
+export function SyncStatus({ holdProgress, isCurrentSynced, show, className }: SyncStatusProps) {
     return (
         <AnimatePresence>
             {show && (
@@ -14,7 +16,10 @@ export function SyncStatus({ holdProgress, isCurrentSynced, show }: SyncStatusPr
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}
-                    className="hidden md:flex fixed bottom-20 left-1/2 -translate-x-1/2 z-[110] flex flex-col items-center pointer-events-none"
+                    className={cn(
+                        "!hidden md:!flex absolute bottom-20 left-1/2 -translate-x-1/2 z-[110] flex-col items-center pointer-events-none",
+                        className
+                    )}
                 >
                     <motion.span
                         animate={isCurrentSynced ? { opacity: 0.5 } : { opacity: [0.3, 0.6, 0.3] }}

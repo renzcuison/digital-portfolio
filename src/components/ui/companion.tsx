@@ -1,6 +1,6 @@
 "use client";
 import { motion, AnimatePresence, useSpring, useTransform } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useTheme } from "next-themes";
 import { COMPANION_THEMES, getGradientString } from "@/lib/constants";
 import { useCompanionAnimation } from "@/hooks/use-companion-animation";
@@ -26,6 +26,7 @@ export default function Companion({
     onStartHold,
     onStopHold
 }: CompanionProps) {
+    const containerRef = useRef<HTMLDivElement>(null);
     const { theme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const [imageLoaded, setImageLoaded] = useState(false);
@@ -72,6 +73,24 @@ export default function Companion({
             img.decode().then(() => setImageLoaded(true)).catch(() => setImageLoaded(true));
         };
     }, [imagePath]);
+
+    useEffect(() => {
+        const element = containerRef.current;
+        if (!element) return;
+
+        const handleWheel = (e: WheelEvent) => {
+            if (e.cancelable) {
+                e.preventDefault();
+            }
+
+        };
+
+        element.addEventListener("wheel", handleWheel, { passive: false });
+
+        return () => {
+            element.removeEventListener("wheel", handleWheel);
+        };
+    }, []);
 
     if (!mounted) return null;
 

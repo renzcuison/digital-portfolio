@@ -8,11 +8,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      // ADD THIS SECTION BELOW
       screens: {
         '3xl': '2000px',
       },
-      // ... rest of your existing extend
+      boxShadow: {
+      'glow': '0 0 15px rgba(6, 182, 212, 0.5)',
+    }
     },
   },
   plugins: [require("tailwindcss-animate")],
