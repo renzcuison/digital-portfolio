@@ -1,32 +1,44 @@
 "use client";
-import React, { useRef, useState } from "react";
-import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
-const ImageCard = ({ src, alt, isCenter = false }: { src: string, alt: string, isCenter?: boolean }) => (
-    <div className="relative shrink-0 [perspective:1000px] w-full xs:w-[280px] md:w-56 lg:w-64 xl:w-72">
-        <div className={`relative aspect-[3/4] rounded-[2.5rem] overflow-hidden border bg-[#050505] shadow-2xl transition-all duration-700 ${isCenter ? 'border-zinc-200/40 dark:border-white/10' : 'border-zinc-200/10 dark:border-white/5'
-            }`}>
-            <div className="absolute inset-0 z-30 bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none" />
-            <div className="w-full h-full flex items-end justify-center relative">
-                <div
-                    className={`absolute bottom-0 w-full h-2/3 blur-[80px] rounded-full z-0 transition-opacity duration-1000 ${isCenter ? 'opacity-100 bg-white/10' : 'opacity-40 bg-white/5'
-                        }`}
-                    style={{ mixBlendMode: 'soft-light' }}
-                />
+const IMAGES = [
+    { id: 1, src: "/renz-left.png", alt: "Left View" },
+    { id: 2, src: "/renz-digital.png", alt: "Center View" },
+    { id: 3, src: "/renz-right.png", alt: "Right View" },
+];
+
+const ImageCard = ({ src, alt }: { src: string, alt: string }) => (
+    <div className="relative shrink-0 flex-none [perspective:1000px]
+        w-[calc((100vw-4.5rem)/3)]
+        md:w-[calc((100vw-7rem)/3)]
+        lg:w-[35vh]
+        xl:w-[45vh]
+        max-w-full">
+
+        <svg className="absolute w-0 h-0">
+            <filter id="digital-stream">
+                <feTurbulence type="fractalNoise" baseFrequency="0 0.15" numOctaves="1" result="warp">
+                    <animate attributeName="baseFrequency" dur="2s" values="0 0.15; 0 0.18; 0 0.15" repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="warp" scale="4" />
+            </filter>
+        </svg>
+
+        <div className="relative aspect-square rounded-[1.5vh] md:rounded-[3vh] overflow-hidden border border-zinc-200 dark:border-white/10 bg-white/50 dark:bg-black shadow-xl backdrop-blur-sm transition-all duration-500">
+            <div className="w-full h-full flex items-center justify-center relative p-[10%]">
                 <img
                     src={src}
                     alt={alt}
-                    className="w-full h-[92%] object-contain object-bottom transition-all duration-700 z-20"
+                    className="w-full h-full object-contain object-center z-20 grayscale contrast-125 dark:grayscale-0 dark:invert-0 transition-all duration-700"
                     style={{
-                        WebkitMaskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)',
-                        maskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)',
-                        filter: isCenter
-                            ? 'brightness(1.1) contrast(1.1) drop-shadow(0 0 20px rgba(255,255,255,0.1))'
-                            : 'brightness(0.8) contrast(1.2) grayscale(0.5)',
+                        filter: 'url(#digital-stream) brightness(var(--img-brightness, 1)) contrast(1.1)',
+                        WebkitMaskImage: `radial-gradient(circle at center, black 35%, transparent 92%), linear-gradient(to bottom, black 65%, transparent 95%)`,
+                        maskImage: `radial-gradient(circle at center, black 35%, transparent 92%), linear-gradient(to bottom, black 65%, transparent 95%)`,
+                        WebkitMaskComposite: 'source-in',
+                        maskComposite: 'intersect',
                     }}
                 />
-                <div className="absolute inset-0 z-25 bg-gradient-to-t from-[#050505] via-transparent to-transparent opacity-90" />
             </div>
         </div>
     </div>
@@ -34,95 +46,66 @@ const ImageCard = ({ src, alt, isCenter = false }: { src: string, alt: string, i
 
 export function AboutBanner() {
     const containerRef = useRef<HTMLDivElement>(null);
-    const [images, setImages] = useState([
-        { id: 1, src: "/renz-left.png", alt: "Renz Left" },
-        { id: 2, src: "/renz-digital.png", alt: "Digital Renz" },
-        { id: 3, src: "/renz-right.png", alt: "Renz Right" },
-    ]);
-
-    const rotateRight = () => setImages((prev) => [prev[1], prev[2], prev[0]]);
-    const rotateLeft = () => setImages((prev) => [prev[2], prev[0], prev[1]]);
-
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start end", "center center"]
-    });
-
+    const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "center center"] });
     const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+
     const yTranslate = useTransform(smoothProgress, [0, 1], [30, 0]);
     const opacity = useTransform(smoothProgress, [0, 0.2], [0, 1]);
 
     return (
-        <section ref={containerRef} className="relative w-full pt-12 pb-24 px-8 md:px-12 overflow-hidden flex items-center justify-start bg-transparent">
-            <motion.div style={{ opacity, y: yTranslate }} className="relative z-10 w-full flex flex-col xl:flex-row gap-16 xl:gap-8 items-center justify-between">
+        <section ref={containerRef} className="relative w-full pt-12 pb-24 px-6 md:px-12 overflow-hidden bg-transparent">
+            <motion.div style={{ opacity, y: yTranslate }} className="relative z-10 w-full flex flex-col xl:flex-row gap-8 lg:gap-12 items-center justify-between">
 
-                <div className="flex-1 space-y-6 md:space-y-8 z-20">
-                    <div className="space-y-2">
-                        <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500">About Me</span>
-                        <h2 className="text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-black italic tracking-tighter text-slate-950 dark:text-white uppercase leading-[0.8]">Renz Cuison</h2>
+                <div className="w-full xl:flex-1 space-y-8 z-20 flex flex-col justify-center">
+                    <div className="space-y-1">
+                        <span className="text-[10px] 2xl:text-xs font-black uppercase tracking-[0.4em] text-slate-950 dark:text-white">
+                            Creative Web Developer
+                        </span>
+                        <h2 className="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-extrabold uppercase italic text-slate-950 dark:text-white leading-none text-left">
+                            Renz Cuison
+                        </h2>
                     </div>
-                    <p className="max-w-[450px] text-xs md:text-[11px] lg:text-sm leading-relaxed text-zinc-500 dark:text-zinc-400 font-medium">
-                        Hi, I'm a creative developer (on web). I like making things cool. I work efficiently as it shows in my works. I like coding, and the fun's on another level when I'm in control. Everything I build is simple, sleek, and just works well.
+
+                    <p className="max-w-2xl text-xs md:text-sm lg:text-base leading-relaxed text-zinc-500 dark:text-zinc-400 font-medium">
+                        I am a Creative Web Developer who aspires to create really nice digital experiences. While I am very fond of creative web development, I have a good background in Full Stack Development creating and engineering web systems.
                     </p>
-                    <div className="grid grid-cols-2 md:flex gap-3 pt-4 w-full md:w-auto">
-                        <a href="/resume.pdf" target="_blank" className="group relative w-full md:w-auto px-4 md:px-8 py-3 border border-zinc-200 dark:border-white/10 flex items-center justify-center overflow-hidden bg-transparent">
-                            <div className="absolute inset-0 bg-slate-950 dark:bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                            <span className="relative text-[10px] font-bold uppercase tracking-widest text-zinc-500 group-hover:text-white dark:group-hover:text-black transition-colors">View Resume</span>
-                        </a>
-                        <button className="group relative w-full md:w-auto px-4 md:px-8 py-3 border border-zinc-200 dark:border-white/10 flex items-center justify-center overflow-hidden bg-transparent">
-                            <div className="absolute inset-0 bg-zinc-100 dark:bg-zinc-800 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                            <span className="relative text-[10px] font-bold uppercase tracking-widest text-zinc-500 group-hover:text-slate-950 dark:group-hover:text-white transition-colors">Learn More</span>
-                        </button>
+
+                    <div className="flex flex-col sm:flex-row gap-3 pt-4 w-full">
+                        {["View Resume", "Contact Me"].map((text) => (
+                            <motion.button
+                                key={text}
+                                initial="initial"
+                                whileHover="hover"
+                                onClick={() => text === "View Resume" && window.open("/resume.pdf", "_blank")}
+                                className="group relative px-8 h-12 md:h-10 border border-zinc-200 dark:border-white/10 flex items-center justify-center overflow-hidden cursor-pointer w-full sm:w-auto sm:min-w-[150px]"
+                            >
+                                <motion.div
+                                    variants={{
+                                        initial: { y: "100%" },
+                                        hover: { y: 0 }
+                                    }}
+                                    transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+                                    className="absolute inset-0 bg-slate-950 dark:bg-white"
+                                />
+                                <span className="relative text-xs md:text-[10px] font-bold uppercase tracking-widest text-zinc-500 group-hover:text-white dark:group-hover:text-black transition-colors duration-300">
+                                    {text}
+                                </span>
+                            </motion.button>
+                        ))}
                     </div>
                 </div>
 
-                <div className="flex-[2] relative w-full flex flex-col items-center justify-center">
-
-                    <button onClick={rotateLeft} className="absolute left-0 xl:left-[-20px] z-50 p-4 rounded-full border border-white/10 bg-black/40 backdrop-blur-xl text-white hover:bg-white hover:text-black transition-all active:scale-90 hidden md:flex">
-                        <ChevronLeft size={20} />
-                    </button>
-
-                    <button onClick={rotateRight} className="absolute right-0 xl:right-[-20px] z-50 p-4 rounded-full border border-white/10 bg-black/40 backdrop-blur-xl text-white hover:bg-white hover:text-black transition-all active:scale-90 hidden md:flex">
-                        <ChevronRight size={20} />
-                    </button>
-
-                    {/* Image Track */}
-                    <div className="flex items-center justify-center gap-4 lg:gap-8 overflow-visible relative">
-                        <AnimatePresence mode="popLayout" initial={false}>
-                            {images.map((img, index) => {
-                                const isCenter = index === 1;
-                                return (
-                                    <motion.div
-                                        key={img.id}
-                                        layout
-                                        initial={{ opacity: 0, scale: 0.8 }}
-                                        animate={{
-                                            opacity: isCenter ? 1 : 0.3,
-                                            scale: isCenter ? 1 : 0.9,
-                                            zIndex: isCenter ? 30 : 10
-                                        }}
-                                        exit={{ opacity: 0, scale: 0.8 }}
-                                        transition={{ type: "spring", stiffness: 260, damping: 25 }}
-                                        className={index === 0 || index === 2 ? "hidden md:block" : "block"}
-                                    >
-                                        <ImageCard src={img.src} alt={img.alt} isCenter={isCenter} />
-                                    </motion.div>
-                                );
-                            })}
-                        </AnimatePresence>
-                    </div>
-
-                    <div className="flex md:hidden gap-6 mt-8">
-                        <button onClick={rotateLeft} className="p-4 rounded-full border border-zinc-200 dark:border-white/10 bg-white dark:bg-black/40 shadow-lg active:scale-90">
-                            <ChevronLeft size={20} />
-                        </button>
-                        <button onClick={rotateRight} className="p-4 rounded-full border border-zinc-200 dark:border-white/10 bg-white dark:bg-black/40 shadow-lg active:scale-90">
-                            <ChevronRight size={20} />
-                        </button>
+                <div className="w-full xl:flex-[1.5] relative">
+                    <div className="grid grid-cols-3 gap-3 lg:gap-3">
+                        {IMAGES.map((img) => (
+                            <ImageCard key={img.id} src={img.src} alt={img.alt} />
+                        ))}
                     </div>
                 </div>
 
             </motion.div>
-        </section>
+        </section >
     );
 }
+
+export default AboutBanner;

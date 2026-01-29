@@ -1,9 +1,20 @@
 "use client";
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { motion, useSpring, useTransform, animate } from "framer-motion";
 
 export function LoadingScreen() {
     const strokeColor = "currentColor";
+    const [progress, setProgress] = useState(0);
+
+    useEffect(() => {
+        const controls = animate(0, 100, {
+            duration: 3,
+            ease: "easeInOut",
+            onUpdate: (value) => setProgress(Math.round(value)),
+        });
+
+        return () => controls.stop();
+    }, []);
 
     return (
         <motion.div
@@ -71,11 +82,11 @@ export function LoadingScreen() {
 
             <motion.div
                 initial={{ opacity: 0 }}
-                animate={{ opacity: [0.2, 0.5, 0.2] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-                className="mt-8 font-mono text-[10px] uppercase tracking-[0.3em] opacity-50"
+                animate={{ opacity: 1 }}
+                className="mt-8 font-mono text-xs tracking-[0.3em]"
             >
-                System_Initializing...
+                <span className="opacity-50">LOADING_</span>
+                <span className="tabular-nums">{progress}%</span>
             </motion.div>
         </motion.div>
     );

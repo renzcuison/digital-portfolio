@@ -17,7 +17,7 @@ export function SyncStatus({ holdProgress, isCurrentSynced, show, className }: S
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}
                     className={cn(
-                        "!hidden md:!flex absolute bottom-20 left-1/2 -translate-x-1/2 z-[110] flex-col items-center pointer-events-none",
+                        "!hidden xl:!flex absolute bottom-20 left-1/2 -translate-x-1/2 z-[110] flex-col items-center pointer-events-none",
                         className
                     )}
                 >

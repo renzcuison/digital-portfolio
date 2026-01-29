@@ -45,10 +45,10 @@ export function Hero({ activeCompanion, selectedId, setSelectedId, isBoosting }:
 
             <div className="w-full p-8 md:p-12 flex flex-col md:flex-row justify-between items-end gap-8">
                 <div className="w-full md:max-w-[320px] 2xl:max-w-[450px] space-y-5 pointer-events-auto">
-                    <div className="space-y-2">
-                        <h2 className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500">
+                    <div className="space-y-3">
+                        <span className="block text-[10px] 2xl:text-xs font-black uppercase tracking-[0.4em] text-slate-950 dark:text-white">
                             Select Interface
-                        </h2>
+                        </span>
                         <div className="flex gap-2 2xl:gap-4 w-full">
                             {COMPANIONS.map((comp, idx) => (
                                 <button
@@ -83,10 +83,10 @@ export function Hero({ activeCompanion, selectedId, setSelectedId, isBoosting }:
                             exit={{ opacity: 0, x: -20 }}
                             className="space-y-3 md:space-y-2"
                         >
-                            <h1 className="text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-black italic tracking-tighter text-slate-950 dark:text-white uppercase leading-[0.8]">
+                            <h2 className="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-extrabold uppercase italic text-slate-950 dark:text-white leading-none">
                                 {activeCompanion.name}
-                            </h1>
-                            <p className="text-xs md:text-[11px] lg:text-sm leading-relaxed text-zinc-500 dark:text-zinc-400 font-medium md:ml-auto">
+                            </h2>
+                            <p className="text-xs md:text-sm lg:text-base leading-relaxed text-zinc-500 dark:text-zinc-400 font-medium md:ml-auto tracking-tight">
                                 {activeCompanion.bio}
                             </p>
                         </motion.div>
