@@ -67,7 +67,7 @@ export function AboutBanner() {
                     </div>
 
                     <p className="max-w-2xl text-xs md:text-sm lg:text-base leading-relaxed text-zinc-500 dark:text-zinc-400 font-medium">
-                        I am a Creative Web Developer who aspires to create really nice digital experiences. While I am very fond of creative web development, I have a good background in Full Stack Development creating and engineering web systems.
+                        I am a Creative Web Developer who aspires to create engaging digital experiences. While I am  passionate about creative web development, I also have a strong background in full-stack development, building and engineering web systems.
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-3 pt-4 w-full">
