@@ -1,9 +1,12 @@
 "use client";
+
 import { motion, AnimatePresence, useSpring, useTransform } from "framer-motion";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
-import { COMPANION_THEMES, getGradientString } from "@/lib/constants";
+import { COMPANION_THEMES, getGradientString, COMPANION_CONFIG } from "@/lib/constants";
 import { useCompanionAnimation } from "@/hooks/use-companion-animation";
+import { useImagePreloader } from "@/hooks/use-image-preloader";
+import { useCompanionZoom } from "@/hooks/use-companion-zoom";
 
 interface CompanionProps {
     imagePath: string;
@@ -28,28 +31,31 @@ export default function Companion({
     onStopHold,
     onLoad
 }: CompanionProps) {
-    const containerRef = useRef<HTMLDivElement>(null);
     const { theme } = useTheme();
     const [mounted, setMounted] = useState(false);
-    const [imageLoaded, setImageLoaded] = useState(false);
-    const [isHovering, setIsHovering] = useState(false);
 
+    const imageLoaded = useImagePreloader(imagePath, onLoad);
     const anim = useCompanionAnimation(isActive, isBoosting);
 
-    const rawZoom = useSpring(1, { stiffness: 300, damping: 30 });
-    const mouseX = useSpring(mouseRawX, { stiffness: 200, damping: 30 });
-    const mouseY = useSpring(mouseRawY, { stiffness: 200, damping: 30 });
+    const rawZoom = useSpring(1, COMPANION_CONFIG.SPRING_ZOOM);
+    const mouseX = useSpring(mouseRawX, COMPANION_CONFIG.SPRING_MOUSE);
+    const mouseY = useSpring(mouseRawY, COMPANION_CONFIG.SPRING_MOUSE);
+
+    const { containerRef, setIsHovering } = useCompanionZoom(rawZoom);
 
     const activeTheme = theme === "dark" ? "dark" : "light";
     const themeConfig = COMPANION_THEMES[activeTheme];
     const dotColor = themeConfig.dot;
 
-    const translateX = useTransform(mouseX as any, [-0.5, 0.5], [-40, 40]);
-    const rotateX = useTransform(mouseY as any, [-0.5, 0.5], [20, -20]);
-    const rotateY = useTransform(mouseX as any, [-0.5, 0.5], [-25, 25]);
-    const combinedY = useTransform(mouseY, (latest: any) => Number(latest) * 60);
+    const { TRANSFORMS } = COMPANION_CONFIG;
+
+    const translateX = useTransform(mouseX as any, TRANSFORMS.TRANSLATE_X.input, TRANSFORMS.TRANSLATE_X.output);
+    const rotateX = useTransform(mouseY as any, TRANSFORMS.ROTATE_X.input, TRANSFORMS.ROTATE_X.output);
+    const rotateY = useTransform(mouseX as any, TRANSFORMS.ROTATE_Y.input, TRANSFORMS.ROTATE_Y.output);
+    const combinedY = useTransform(mouseY, (latest: any) => Number(latest) * TRANSFORMS.MOUSE_Y_MULTIPLIER);
+
     const finalScale = useTransform([rawZoom, anim.time], ([z, t]) =>
-        (z as number) * (1 + Math.sin((t as number) * 2) * 0.015)
+        (z as number) * (1 + Math.sin((t as number) * 2) * TRANSFORMS.BREATH_AMPLITUDE)
     );
 
     const rgbBackground = useTransform(
@@ -57,63 +63,20 @@ export default function Companion({
         ([x1, y1, x2, y2]) => getGradientString(
             activeTheme,
             themeConfig as any,
-            {
-                x1: x1 as number,
-                y1: y1 as number,
-                x2: x2 as number,
-                y2: y2 as number
-            },
+            { x1: x1 as number, y1: y1 as number, x2: x2 as number, y2: y2 as number },
             isMobile
         )
     );
 
-    useEffect(() => {
-        setMounted(true);
-        const img = new Image();
-        img.src = imagePath;
-
-        if (img.complete) {
-            setImageLoaded(true);
-            onLoad?.();
-        } else {
-            setImageLoaded(false);
-            img.onload = () => {
-                img.decode().then(() => {
-                    setImageLoaded(true);
-                    onLoad?.();
-                });
-            };
-        }
-    }, [imagePath]);
-
-    useEffect(() => {
-        const element = containerRef.current;
-        if (!element) return;
-
-        const handleWheel = (e: WheelEvent) => {
-            if (isHovering) {
-                if (e.cancelable) {
-                    e.preventDefault();
-                }
-
-                const zoomSpeed = 0.001;
-                const next = Math.min(Math.max(rawZoom.get() + e.deltaY * -zoomSpeed, 1.0), 1.35);
-                rawZoom.set(next);
-            }
-        };
-
-        element.addEventListener("wheel", handleWheel, { passive: false });
-
-        return () => {
-            element.removeEventListener("wheel", handleWheel);
-        };
-    }, [isHovering, rawZoom]);
+    useEffect(() => { setMounted(true); }, []);
 
     if (!mounted) return null;
 
     return (
-        <div className="absolute inset-0 z-0 flex items-center justify-center overflow-hidden bg-transparent pointer-events-none select-none" style={{ perspective: "1200px", cursor: "auto" }}>
-
+        <div
+            className="absolute inset-0 z-0 flex items-center justify-center overflow-hidden bg-transparent pointer-events-none select-none"
+            style={{ perspective: "1200px", cursor: "auto" }}
+        >
             <AnimatePresence>
                 {!imageLoaded && (
                     <motion.div
@@ -191,7 +154,7 @@ export default function Companion({
                         }} />
 
                         {!isMobile && (
-                            <>as
+                            <>
                                 <motion.div className="absolute inset-0 opacity-40" style={{ background: rgbBackground as any, backgroundSize: "14px 14px", WebkitMaskImage: `radial-gradient(1px 1px at 50% 50%, ${dotColor} 90%, transparent 100%)`, WebkitMaskSize: `7px 7px`, WebkitMaskPosition: anim.posLayer4 as any, transform: "rotate(10deg) scale(1.5)" }} />
                                 <motion.div className="absolute inset-0 opacity-50" style={{
                                     background: rgbBackground as any, backgroundSize: "46px 46px", WebkitMaskImage: `radial-gradient(var(--bw) var(--bh) at 50% 50%, ${dotColor} 70%, transparent 100%)`, WebkitMaskSize: `23px 23px`, WebkitMaskPosition: anim.posLayer3 as any, // @ts-ignore

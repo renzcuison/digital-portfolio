@@ -90,3 +90,22 @@ export const ABOUT_TEXT = {
   name: "Renz Cuison",
   description: "I am a Creative Web Developer who aspires to create engaging digital experiences. While I am passionate about creative web development, I also have a strong background in full-stack development, building and engineering web systems.",
 };
+
+export const COMPANION_CONFIG = {
+  SPRING_ZOOM: { stiffness: 300, damping: 30 },
+  SPRING_MOUSE: { stiffness: 200, damping: 30 },
+
+  ZOOM: {
+    MIN: 1.0,
+    MAX: 1.35,
+    SPEED: 0.001,
+  },
+
+  TRANSFORMS: {
+    TRANSLATE_X: { input: [-0.5, 0.5], output: [-40, 40] },
+    ROTATE_X: { input: [-0.5, 0.5], output: [20, -20] },
+    ROTATE_Y: { input: [-0.5, 0.5], output: [-25, 25] },
+    MOUSE_Y_MULTIPLIER: 60,
+    BREATH_AMPLITUDE: 0.015,
+  }
+};
