@@ -18,15 +18,9 @@ export function LoadingScreen({ progress, onComplete, status }: LoadingScreenPro
     useEffect(() => {
         setMounted(true);
 
-        document.documentElement.style.cursor = 'none';
-        document.body.style.cursor = 'none';
-
         window.dispatchEvent(new Event("app_loading_start"));
 
         return () => {
-            document.documentElement.style.cursor = '';
-            document.body.style.cursor = '';
-
             window.dispatchEvent(new Event("app_loading_end"));
         };
     }, []);
@@ -50,7 +44,6 @@ export function LoadingScreen({ progress, onComplete, status }: LoadingScreenPro
 
     return (
         <div className="fixed inset-0 z-[10000] bg-white dark:bg-black flex flex-col items-center justify-center font-mono transition-colors duration-500 loading-screen-container">
-            {/* Note: I bumped z-index to 10000 to ensure it's above the cursor (9998/9999) */}
             <motion.div exit={{ opacity: 0, filter: "blur(20px)" }} className="flex flex-col items-center">
                 <div className="relative flex items-center justify-center">
                     <svg className="w-40 h-40 -rotate-90" viewBox="0 0 120 120">
