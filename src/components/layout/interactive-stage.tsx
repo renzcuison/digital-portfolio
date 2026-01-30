@@ -6,6 +6,7 @@ import { SyncStatus } from "@/components/ui/sync-status";
 
 const Companion = dynamic(() => import("@/components/ui/companion"), {
     loading: () => <div className="fixed inset-0 bg-transparent" />,
+    ssr: false // Ensure it only runs on the client to catch theme changes
 });
 
 interface InteractiveStageProps {
@@ -13,6 +14,9 @@ interface InteractiveStageProps {
 }
 
 export function InteractiveStage({ logic }: InteractiveStageProps) {
+    // Determine the character ID string safely
+    const activeId = logic.activeCompanion?.id;
+
     return (
         <div className="relative h-screen w-full overflow-hidden select-none">
             <div className="absolute top-0 left-0 w-full h-full z-[105] flex items-center justify-center pointer-events-none">
@@ -29,17 +33,21 @@ export function InteractiveStage({ logic }: InteractiveStageProps) {
                 )}
 
                 <div className="w-full max-w-[700px] h-[50vh] flex items-center justify-center pointer-events-none md:pointer-events-auto cursor-crosshair">
-                    <Companion
-                        imagePath={logic.activeCompanion.path}
-                        isActive={true}
-                        isBoosting={logic.isBoosting}
-                        isMobile={logic.isMobile}
-                        mouseRawX={logic.mouseRawX}
-                        mouseRawY={logic.mouseRawY}
-                        onStartHold={logic.startHold}
-                        onStopHold={logic.stopHold}
-                        onLoad={logic.setSystemReady}
-                    />
+                    {activeId && (
+                        <Companion
+                            key={`${activeId}-${logic.activeCompanion.path}`}
+                            characterId={activeId}
+                            imagePath={logic.activeCompanion.path}
+                            isActive={true}
+                            isBoosting={logic.isBoosting}
+                            isMobile={logic.isMobile}
+                            mouseRawX={logic.mouseRawX}
+                            mouseRawY={logic.mouseRawY}
+                            onStartHold={logic.startHold}
+                            onStopHold={logic.stopHold}
+                            onLoad={logic.setSystemReady}
+                        />
+                    )}
                 </div>
             </div>
 

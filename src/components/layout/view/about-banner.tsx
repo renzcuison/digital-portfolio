@@ -13,13 +13,23 @@ const ImageCard = ({ src, alt }: { src: string, alt: string }) => (
         max-w-full">
 
         <div className="relative aspect-square rounded-[1.5vh] md:rounded-[3vh] overflow-hidden border border-zinc-200 dark:border-white/10 bg-white/50 dark:bg-black shadow-xl backdrop-blur-sm transition-all duration-500">
+            <div
+                className="absolute inset-0 z-30 pointer-events-none opacity-[0.12] mix-blend-overlay"
+                style={{
+                    background: `linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                                 linear-gradient(90deg, rgba(0, 150, 255, 0.1), rgba(0, 255, 255, 0.05), rgba(0, 100, 255, 0.1))`,
+                    backgroundSize: '100% 4px, 3px 100%'
+                }}
+            />
+
             <div className="w-full h-full flex items-center justify-center relative p-[10%]">
                 <img
                     src={src}
                     alt={alt}
-                    className="w-full h-full object-contain object-center z-20 grayscale contrast-125 dark:grayscale-0 dark:invert-0 transition-all duration-700"
+                    className="w-full h-full object-contain object-center z-20 transition-all duration-700"
                     style={{
-                        filter: 'url(#digital-stream) brightness(var(--img-brightness, 1)) contrast(1.1)',
+                        // Light blue scan filter, no animation or transforms
+                        filter: 'url(#digital-stream) brightness(var(--img-brightness, 1)) contrast(1.1) sepia(1) saturate(3) hue-rotate(190deg)',
                         WebkitMaskImage: `radial-gradient(circle at center, black 35%, transparent 92%), linear-gradient(to bottom, black 65%, transparent 95%)`,
                         maskImage: `radial-gradient(circle at center, black 35%, transparent 92%), linear-gradient(to bottom, black 65%, transparent 95%)`,
                         WebkitMaskComposite: 'source-in',

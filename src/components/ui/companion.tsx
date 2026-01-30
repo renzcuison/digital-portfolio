@@ -9,6 +9,7 @@ import { useImagePreloader } from "@/hooks/companion/use-image-preloader";
 import { useCompanionZoom } from "@/hooks/companion/use-companion-zoom";
 
 interface CompanionProps {
+    characterId: keyof typeof COMPANION_THEMES;
     imagePath: string;
     isActive: boolean;
     isBoosting: boolean;
@@ -21,6 +22,7 @@ interface CompanionProps {
 }
 
 export default function Companion({
+    characterId,
     imagePath,
     isActive,
     isBoosting,
@@ -59,7 +61,9 @@ export default function Companion({
     const { containerRef, setIsHovering } = useCompanionZoom(rawZoom);
 
     const activeTheme = theme === "dark" ? "dark" : "light";
-    const themeConfig = COMPANION_THEMES[activeTheme];
+    const characterTheme = COMPANION_THEMES[characterId] || Object.values(COMPANION_THEMES)[0];
+    const themeConfig = characterTheme[activeTheme];
+
     const dotColor = themeConfig.dot;
     const { TRANSFORMS } = COMPANION_CONFIG;
 
