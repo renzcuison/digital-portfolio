@@ -109,3 +109,28 @@ export const COMPANION_CONFIG = {
     BREATH_AMPLITUDE: 0.015,
   }
 };
+
+export const LOADING_CIRCLE_CIRCUMFERENCE = 314.159;
+
+export const GUN_SETTINGS = {
+  FIRE_RATE: 110,
+  HEAT_INC: 5,
+  COOL_NORMAL: 0.8,
+  COOL_OVERHEAT: 1.5,
+
+  MAX_VISIBLE_HOLES: 12,
+  HOLE_STAY_TIME: 1000,
+  RECOIL_FORCE: -14,
+  RECOIL_STIFFNESS: 1000,
+  RECOIL_DAMPING: 20,
+  PEW_SCATTER_RANGE: 40,
+};
+
+export const INTERACTIVE_ELEMENTS = [
+  'button',
+  'a',
+  'input',
+  'textarea',
+  'select',
+  '[role="button"]',
+].join(',');

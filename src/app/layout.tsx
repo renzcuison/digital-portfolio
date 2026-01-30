@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { SITE_CONFIG } from "@/lib/constants";
+import { CursorFollower } from "@/components/ui/cursor/cursor-follower";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -64,6 +65,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <CursorFollower />
+
           {children}
         </ThemeProvider>
       </body>
