@@ -19,6 +19,14 @@ export const COMPANIONS = [
   },
 ] as const;
 
+export const CRITICAL_ASSETS = [
+  "/frieren.png",
+  "/renz-digital.png",
+  "/renz-left.png",
+  "/renz-right.png",
+  ...COMPANIONS.map((c) => c.path),
+];
+
 export const SITE_CONFIG = {
   name: "Renz Cuison",
   email: "rbboy099@gmail.com",

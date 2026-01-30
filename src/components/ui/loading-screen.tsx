@@ -1,93 +1,62 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { motion, useSpring, useTransform, animate } from "framer-motion";
+import { motion } from "framer-motion";
 
-export function LoadingScreen() {
-    const strokeColor = "currentColor";
-    const [progress, setProgress] = useState(0);
+interface LoadingScreenProps {
+    progress: number;
+    onComplete?: () => void;
+    status?: string;
+}
+
+export function LoadingScreen({ progress, onComplete, status }: LoadingScreenProps) {
+    const [displayValue, setDisplayValue] = useState(0);
+    const strokeDash = 314.159;
 
     useEffect(() => {
-        const controls = animate(0, 100, {
-            duration: 3,
-            ease: "easeInOut",
-            onUpdate: (value) => setProgress(Math.round(value)),
-        });
+        const timer = setTimeout(() => {
+            if (displayValue < progress) {
+                setDisplayValue(prev => prev + 1);
+            }
+        }, 10);
+        return () => clearTimeout(timer);
+    }, [displayValue, progress]);
 
-        return () => controls.stop();
-    }, []);
+    useEffect(() => {
+        if (displayValue >= 100) {
+            onComplete?.();
+        }
+    }, [displayValue, onComplete]);
 
     return (
-        <motion.div
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-white text-black dark:bg-black dark:text-white"
-        >
-            <div className="relative h-24 w-24">
-                <motion.svg
-                    viewBox="0 0 100 100"
-                    className="absolute inset-0 h-full w-full"
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                >
-                    <circle
-                        cx="50"
-                        cy="50"
-                        r="45"
-                        fill="none"
-                        stroke={strokeColor}
-                        strokeWidth="1"
-                        strokeDasharray="10 20"
-                        className="opacity-20"
-                    />
-                </motion.svg>
-
-                <motion.svg
-                    viewBox="0 0 100 100"
-                    className="absolute inset-0 h-full w-full"
-                    animate={{ rotate: -360 }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                >
-                    <circle
-                        cx="50"
-                        cy="50"
-                        r="38"
-                        fill="none"
-                        stroke={strokeColor}
-                        strokeWidth="2"
-                        strokeDasharray="60 100"
-                        strokeLinecap="round"
-                        className="opacity-60"
-                    />
-                </motion.svg>
-
-                <motion.div
-                    className="absolute inset-0 flex items-center justify-center"
-                    initial={{ opacity: 0.3 }}
-                    animate={{ opacity: [0.3, 1, 0.3] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                >
-                    <div className="h-4 w-4 rounded-full border border-current shadow-[0_0_15px_rgba(255,255,255,0.5)] dark:shadow-[0_0_15px_rgba(255,255,255,0.2)]" />
-                </motion.div>
-
-                {[0, 90, 180, 270].map((angle) => (
-                    <div
-                        key={angle}
-                        className="absolute h-full w-full"
-                        style={{ transform: `rotate(${angle}deg)` }}
-                    >
-                        <div className="mx-auto h-2 w-[1px] bg-current opacity-40" />
+        <div className="fixed inset-0 z-[999] bg-black flex flex-col items-center justify-center font-mono">
+            <motion.div exit={{ opacity: 0, filter: "blur(20px)" }} className="flex flex-col items-center">
+                <div className="relative flex items-center justify-center">
+                    <svg className="w-40 h-40 -rotate-90" viewBox="0 0 120 120">
+                        <circle cx="60" cy="60" r="50" fill="none" stroke="white" strokeWidth="1" className="opacity-10" />
+                        <motion.circle
+                            cx="60" cy="60" r="50" fill="none" stroke="white" strokeWidth="2"
+                            strokeDasharray={strokeDash}
+                            animate={{ strokeDashoffset: strokeDash - (strokeDash * displayValue) / 100 }}
+                            transition={{ duration: 0.2, ease: "easeOut" }}
+                        />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-3xl font-black italic tracking-widest text-white">
+                            {displayValue.toString().padStart(3, '0')}
+                        </span>
                     </div>
-                ))}
-            </div>
+                </div>
 
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="mt-8 font-mono text-xs tracking-[0.3em]"
-            >
-                <span className="opacity-50">LOADING_</span>
-                <span className="tabular-nums">{progress}%</span>
+                {status && (
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="mt-4 text-[10px] uppercase tracking-[0.3em] text-white/40"
+                    >
+                        {status}
+                    </motion.p>
+                )}
             </motion.div>
-        </motion.div>
+        </div>
     );
 }

@@ -14,6 +14,7 @@ interface CompanionProps {
     mouseRawY: any;
     onStartHold?: () => void;
     onStopHold?: () => void;
+    onLoad?: () => void; // Added to interface
 }
 
 export default function Companion({
@@ -24,7 +25,8 @@ export default function Companion({
     mouseRawX,
     mouseRawY,
     onStartHold,
-    onStopHold
+    onStopHold,
+    onLoad // Destructured here
 }: CompanionProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const { theme } = useTheme();
@@ -67,12 +69,20 @@ export default function Companion({
     useEffect(() => {
         setMounted(true);
         setImageLoaded(false);
+
         const img = new Image();
         img.src = imagePath;
+
         img.onload = () => {
-            img.decode().then(() => setImageLoaded(true)).catch(() => setImageLoaded(true));
+            img.decode().then(() => {
+                setImageLoaded(true);
+                onLoad?.();
+            }).catch(() => {
+                setImageLoaded(true);
+                onLoad?.();
+            });
         };
-    }, [imagePath]);
+    }, [imagePath, onLoad]);
 
     useEffect(() => {
         const element = containerRef.current;

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useMotionValue } from "framer-motion";
-import { SITE_CONFIG, CompanionId, COMPANIONS } from "@/lib/constants";
+import { SITE_CONFIG, CompanionId, COMPANIONS, CRITICAL_ASSETS } from "@/lib/constants";
 
 export function usePortfolioLogic() {
   const [mounted, setMounted] = useState(false);
@@ -12,15 +12,62 @@ export function usePortfolioLogic() {
   const [syncedCompanionId, setSyncedCompanionId] = useState<string | null>(null);
   const [holdProgress, setHoldProgress] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [loadingStatus, setLoadingStatus] = useState("");
 
   const mouseRawX = useMotionValue(0);
   const mouseRawY = useMotionValue(0);
 
-  const holdTimer = useRef<NodeJS.Timeout | null>(null);
-  const drainIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const holdTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const drainIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     setMounted(true);
+
+    const uniqueAssets = Array.from(new Set(CRITICAL_ASSETS));
+    const totalAssets = uniqueAssets.length;
+    let loadedCount = 0;
+
+    if (totalAssets === 0) {
+      setProgress(100);
+      setIsReady(true);
+      return;
+    }
+
+    uniqueAssets.forEach((src) => {
+      const img = new Image();
+
+      const handleLoad = () => {
+        loadedCount++;
+        const currentPercent = Math.round((loadedCount / totalAssets) * 90);
+        setProgress(currentPercent);
+
+        setLoadingStatus(`LOADED: ${src.split('/').pop()}`);
+
+        if (loadedCount === totalAssets) {
+          setLoadingStatus("ASSETS SYNCED");
+        }
+      };
+
+      const handleError = () => {
+        console.error(`Failed to load asset: ${src}`);
+        handleLoad();
+      };
+
+      img.src = src;
+      img.onload = handleLoad;
+      img.onerror = handleError;
+    });
+  }, []);
+
+  const setSystemReady = () => {
+    setProgress(100);
+    setLoadingStatus("READY");
+    setIsReady(true);
+  };
+
+  useEffect(() => {
+    if (!mounted) return;
 
     const handleResize = () => {
       const width = window.innerWidth;
@@ -34,32 +81,25 @@ export function usePortfolioLogic() {
     };
 
     handleResize();
-
     window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", handleMouseMove);
-
-    const readyTimer = setTimeout(() => setIsReady(true), 3500);
 
     return () => {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
-      clearTimeout(readyTimer);
       if (holdTimer.current) clearInterval(holdTimer.current);
       if (drainIntervalRef.current) clearInterval(drainIntervalRef.current);
     };
-  }, [mouseRawX, mouseRawY]);
+  }, [mounted, mouseRawX, mouseRawY]);
 
   const activeCompanion = COMPANIONS.find((c) => c.id === selectedId) || COMPANIONS[0];
   const isCurrentSynced = syncedCompanionId === activeCompanion.id;
 
   const startHold = () => {
     if (isMobile || isCurrentSynced) return;
-
     if (holdTimer.current) clearInterval(holdTimer.current);
     if (drainIntervalRef.current) clearInterval(drainIntervalRef.current);
-
     setIsBoosting(true);
-
     holdTimer.current = setInterval(() => {
       setHoldProgress((prev) => {
         if (prev >= 100) {
@@ -75,10 +115,8 @@ export function usePortfolioLogic() {
 
   const stopHold = () => {
     setIsBoosting(false);
-
     if (holdTimer.current) clearInterval(holdTimer.current);
     if (drainIntervalRef.current) clearInterval(drainIntervalRef.current);
-
     if (!isCurrentSynced) {
       drainIntervalRef.current = setInterval(() => {
         setHoldProgress((prev) => {
@@ -112,7 +150,7 @@ export function usePortfolioLogic() {
   };
 
   return {
-    mounted, isReady, copied, menuOpen, setMenuOpen, toggleMenu: () => setMenuOpen(!menuOpen),
+    mounted, isReady, progress, setSystemReady, loadingStatus, copied, menuOpen, setMenuOpen, toggleMenu: () => setMenuOpen(!menuOpen),
     copyEmail, isMobile, mouseRawX, mouseRawY, selectedId, setSelectedId,
     activeCompanion, isBoosting, holdProgress, isCurrentSynced, startHold, stopHold
   };
