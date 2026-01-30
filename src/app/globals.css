@@ -130,8 +130,13 @@
   body {
     min-height: 100vh;
     min-height: -webkit-fill-available;
-    @apply bg-background text-foreground;
     background-color: transparent !important;
+  }
+
+  html,
+  body {
+    position: relative;
+    overflow-x: hidden;
   }
 
   @keyframes glitch {
@@ -164,11 +169,38 @@
       clip-path: inset(30% 0 20% 0);
       transform: translate(5px, -2px);
     }
+
   }
 
   .animate-glitch {
     animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
     text-shadow: 2px 0 #ff00c1, -2px 0 #00fff9;
     opacity: 0.8;
+  }
+
+  @keyframes intense-shake {
+    0% {
+      transform: translate(0, 0);
+    }
+
+    25% {
+      transform: translate(-var(--shake-x), var(--shake-y));
+    }
+
+    50% {
+      transform: translate(var(--shake-x), -var(--shake-y));
+    }
+
+    75% {
+      transform: translate(-var(--shake-x), -var(--shake-y));
+    }
+
+    100% {
+      transform: translate(0, 0);
+    }
+  }
+
+  .animate-shake {
+    animation: intense-shake 0.05s linear infinite;
   }
 }
