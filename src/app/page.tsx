@@ -1,33 +1,22 @@
 "use client";
 
 import React from "react";
-import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { Header } from "@/components/layout/header";
 import { Hero } from "@/components/layout/hero";
 import { LoadingScreen } from "@/components/ui/loading-screen";
-import { SyncStatus } from "@/components/ui/sync-status";
 import { MobileMenu } from "@/components/layout/mobile-menu";
+import AboutBanner from "@/components/layout/about-banner";
+import { InteractiveStage } from "@/components/layout/interactive-stage";
 import { usePortfolioLogic } from "@/hooks/use-portfolio-logic";
-import { AboutBanner } from "@/components/layout/about-banner";
-
-const Companion = dynamic(() => import("@/components/ui/companion"), {
-  loading: () => <div className="fixed inset-0 bg-transparent" />,
-});
 
 export default function Home() {
-  const {
-    mounted, copied, menuOpen, setMenuOpen, activeCompanion,
-    selectedId, setSelectedId, isBoosting,
-    copyEmail, isReady, setSystemReady, holdProgress, isCurrentSynced, startHold, stopHold,
-    mouseRawX, mouseRawY, isMobile, progress, loadingStatus
-  } = usePortfolioLogic();
-
+  const logic = usePortfolioLogic();
   const [animationFinished, setAnimationFinished] = React.useState(false);
 
-  if (!mounted) return <div className="h-screen bg-white dark:bg-black" />;
+  if (!logic.mounted) return <div className="h-screen bg-white dark:bg-black" />;
 
-  const showContent = isReady && animationFinished;
+  const showContent = logic.isReady && animationFinished;
 
   return (
     <main className="relative min-h-screen w-full bg-transparent transition-colors duration-500 overflow-x-hidden">
@@ -35,8 +24,8 @@ export default function Home() {
         {!showContent && (
           <LoadingScreen
             key="loader"
-            progress={progress}
-            status={loadingStatus}
+            progress={logic.progress}
+            status={logic.loadingStatus}
             onComplete={() => setAnimationFinished(true)}
           />
         )}
@@ -55,58 +44,38 @@ export default function Home() {
       >
         <div className="fixed inset-0 z-0 pointer-events-none text-black/10 dark:text-white/10" />
 
-        <div className="relative h-screen w-full overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full z-[105] flex items-center justify-center pointer-events-none">
-            <div
-              className="md:hidden w-[250px] h-[250px] pointer-events-auto rounded-full absolute"
-              onTouchStart={startHold}
-              onTouchEnd={stopHold}
-            />
+        <InteractiveStage logic={logic} />
 
-            <div className="w-full max-w-[700px] h-[50vh] flex items-center justify-center pointer-events-none md:pointer-events-auto cursor-crosshair">
-              <Companion
-                imagePath={activeCompanion.path}
-                isActive={true}
-                isBoosting={isBoosting}
-                isMobile={isMobile}
-                mouseRawX={mouseRawX}
-                mouseRawY={mouseRawY}
-                onStartHold={startHold}
-                onStopHold={stopHold}
-                // Update: Signal the hook that the main asset is ready
-                onLoad={setSystemReady}
+        <div className="absolute top-0 left-0 w-full h-screen z-[100] flex flex-col pt-16 pointer-events-none">
+          <AnimatePresence mode="wait">
+            {!logic.menuOpen && (
+              <Hero
+                activeCompanion={logic.activeCompanion}
+                selectedId={logic.selectedId}
+                setSelectedId={logic.setSelectedId}
+                isBoosting={logic.isBoosting}
               />
-            </div>
-          </div>
-
-          <SyncStatus holdProgress={holdProgress} isCurrentSynced={isCurrentSynced} show={!menuOpen} />
-
-          <div className="relative h-full z-[100] flex flex-col pt-16 pointer-events-none">
-            <AnimatePresence mode="wait">
-              {!menuOpen && (
-                <Hero
-                  activeCompanion={activeCompanion}
-                  selectedId={selectedId}
-                  setSelectedId={setSelectedId}
-                  isBoosting={isBoosting}
-                />
-              )}
-            </AnimatePresence>
-          </div>
+            )}
+          </AnimatePresence>
         </div>
 
         <AboutBanner />
 
         <div className="fixed top-0 left-0 w-full z-[300] pointer-events-none pt-[env(safe-area-inset-top)] bg-transparent">
-          <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} copied={copied} onCopyEmail={copyEmail} />
+          <Header
+            menuOpen={logic.menuOpen}
+            setMenuOpen={logic.setMenuOpen}
+            copied={logic.copied}
+            onCopyEmail={logic.copyEmail}
+          />
         </div>
       </motion.div>
 
       <MobileMenu
-        isOpen={menuOpen}
-        setIsOpen={setMenuOpen}
-        copied={copied}
-        onCopyEmail={copyEmail}
+        isOpen={logic.menuOpen}
+        setIsOpen={logic.setMenuOpen}
+        copied={logic.copied}
+        onCopyEmail={logic.copyEmail}
       />
     </main>
   );

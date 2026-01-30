@@ -14,7 +14,7 @@ interface CompanionProps {
     mouseRawY: any;
     onStartHold?: () => void;
     onStopHold?: () => void;
-    onLoad?: () => void; // Added to interface
+    onLoad?: () => void;
 }
 
 export default function Companion({
@@ -26,12 +26,13 @@ export default function Companion({
     mouseRawY,
     onStartHold,
     onStopHold,
-    onLoad // Destructured here
+    onLoad
 }: CompanionProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const { theme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const [imageLoaded, setImageLoaded] = useState(false);
+    const [isHovering, setIsHovering] = useState(false);
 
     const anim = useCompanionAnimation(isActive, isBoosting);
 
@@ -68,31 +69,37 @@ export default function Companion({
 
     useEffect(() => {
         setMounted(true);
-        setImageLoaded(false);
-
         const img = new Image();
         img.src = imagePath;
 
-        img.onload = () => {
-            img.decode().then(() => {
-                setImageLoaded(true);
-                onLoad?.();
-            }).catch(() => {
-                setImageLoaded(true);
-                onLoad?.();
-            });
-        };
-    }, [imagePath, onLoad]);
+        if (img.complete) {
+            setImageLoaded(true);
+            onLoad?.();
+        } else {
+            setImageLoaded(false);
+            img.onload = () => {
+                img.decode().then(() => {
+                    setImageLoaded(true);
+                    onLoad?.();
+                });
+            };
+        }
+    }, [imagePath]);
 
     useEffect(() => {
         const element = containerRef.current;
         if (!element) return;
 
         const handleWheel = (e: WheelEvent) => {
-            if (e.cancelable) {
-                e.preventDefault();
-            }
+            if (isHovering) {
+                if (e.cancelable) {
+                    e.preventDefault();
+                }
 
+                const zoomSpeed = 0.001;
+                const next = Math.min(Math.max(rawZoom.get() + e.deltaY * -zoomSpeed, 1.0), 1.35);
+                rawZoom.set(next);
+            }
         };
 
         element.addEventListener("wheel", handleWheel, { passive: false });
@@ -100,7 +107,7 @@ export default function Companion({
         return () => {
             element.removeEventListener("wheel", handleWheel);
         };
-    }, []);
+    }, [isHovering, rawZoom]);
 
     if (!mounted) return null;
 
@@ -124,9 +131,11 @@ export default function Companion({
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: imageLoaded ? 1 : 0.98 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                onWheel={(e) => {
-                    const next = Math.min(Math.max(rawZoom.get() + e.deltaY * -0.001, 1.0), 1.35);
-                    rawZoom.set(next);
+                ref={containerRef}
+                onMouseEnter={() => setIsHovering(true)}
+                onMouseLeave={() => {
+                    setIsHovering(false);
+                    onStopHold?.();
                 }}
                 style={{
                     rotateX: isMobile ? 0 : rotateX,
@@ -182,7 +191,7 @@ export default function Companion({
                         }} />
 
                         {!isMobile && (
-                            <>
+                            <>as
                                 <motion.div className="absolute inset-0 opacity-40" style={{ background: rgbBackground as any, backgroundSize: "14px 14px", WebkitMaskImage: `radial-gradient(1px 1px at 50% 50%, ${dotColor} 90%, transparent 100%)`, WebkitMaskSize: `7px 7px`, WebkitMaskPosition: anim.posLayer4 as any, transform: "rotate(10deg) scale(1.5)" }} />
                                 <motion.div className="absolute inset-0 opacity-50" style={{
                                     background: rgbBackground as any, backgroundSize: "46px 46px", WebkitMaskImage: `radial-gradient(var(--bw) var(--bh) at 50% 50%, ${dotColor} 70%, transparent 100%)`, WebkitMaskSize: `23px 23px`, WebkitMaskPosition: anim.posLayer3 as any, // @ts-ignore

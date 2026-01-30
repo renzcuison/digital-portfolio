@@ -17,8 +17,6 @@ export function ThemeSync() {
 
     const color = resolvedTheme === "dark" ? "#000000" : "#ffffff";
     meta.setAttribute("content", color);
-
-    // console.log("Notch color updated to:", color);
   }, [resolvedTheme]);
 
   return null;

@@ -1,12 +1,8 @@
 "use client";
 import React, { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-
-const IMAGES = [
-    { id: 1, src: "/renz-left.png", alt: "Left View" },
-    { id: 2, src: "/renz-digital.png", alt: "Center View" },
-    { id: 3, src: "/renz-right.png", alt: "Right View" },
-];
+import { motion } from "framer-motion";
+import { ABOUT_IMAGES, ABOUT_TEXT } from "@/lib/constants";
+import { useAboutScroll } from "@/hooks/use-about-scroll";
 
 const ImageCard = ({ src, alt }: { src: string, alt: string }) => (
     <div className="relative shrink-0 flex-none [perspective:1000px]
@@ -15,15 +11,6 @@ const ImageCard = ({ src, alt }: { src: string, alt: string }) => (
         lg:w-[35vh]
         xl:w-[45vh]
         max-w-full">
-
-        <svg className="absolute w-0 h-0">
-            <filter id="digital-stream">
-                <feTurbulence type="fractalNoise" baseFrequency="0 0.15" numOctaves="1" result="warp">
-                    <animate attributeName="baseFrequency" dur="2s" values="0 0.15; 0 0.18; 0 0.15" repeatCount="indefinite" />
-                </feTurbulence>
-                <feDisplacementMap in="SourceGraphic" in2="warp" scale="4" />
-            </filter>
-        </svg>
 
         <div className="relative aspect-square rounded-[1.5vh] md:rounded-[3vh] overflow-hidden border border-zinc-200 dark:border-white/10 bg-white/50 dark:bg-black shadow-xl backdrop-blur-sm transition-all duration-500">
             <div className="w-full h-full flex items-center justify-center relative p-[10%]">
@@ -46,28 +33,32 @@ const ImageCard = ({ src, alt }: { src: string, alt: string }) => (
 
 export function AboutBanner() {
     const containerRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "center center"] });
-    const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
-
-    const yTranslate = useTransform(smoothProgress, [0, 1], [30, 0]);
-    const opacity = useTransform(smoothProgress, [0, 0.2], [0, 1]);
+    const { yTranslate, opacity } = useAboutScroll(containerRef);
 
     return (
         <section ref={containerRef} className="relative w-full pt-12 pb-24 px-6 md:px-12 overflow-hidden bg-transparent">
-            <motion.div style={{ opacity, y: yTranslate }} className="relative z-10 w-full flex flex-col xl:flex-row gap-8 lg:gap-12 items-center justify-between">
+            <svg className="absolute w-0 h-0">
+                <filter id="digital-stream">
+                    <feTurbulence type="fractalNoise" baseFrequency="0 0.15" numOctaves="1" result="warp">
+                        <animate attributeName="baseFrequency" dur="2s" values="0 0.15; 0 0.18; 0 0.15" repeatCount="indefinite" />
+                    </feTurbulence>
+                    <feDisplacementMap in="SourceGraphic" in2="warp" scale="4" />
+                </filter>
+            </svg>
 
+            <motion.div style={{ opacity, y: yTranslate }} className="relative z-10 w-full flex flex-col xl:flex-row gap-8 lg:gap-12 items-center justify-between">
                 <div className="w-full xl:flex-1 space-y-8 z-20 flex flex-col justify-center">
                     <div className="space-y-1">
                         <span className="text-[10px] 2xl:text-xs font-black uppercase tracking-[0.4em] text-slate-950 dark:text-white">
-                            Creative Web Developer
+                            {ABOUT_TEXT.label}
                         </span>
                         <h2 className="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-extrabold uppercase italic text-slate-950 dark:text-white leading-none text-left">
-                            Renz Cuison
+                            {ABOUT_TEXT.name}
                         </h2>
                     </div>
 
                     <p className="max-w-2xl text-xs md:text-sm lg:text-base leading-relaxed text-zinc-500 dark:text-zinc-400 font-medium">
-                        I am a Creative Web Developer who aspires to create engaging digital experiences. While I am  passionate about creative web development, I also have a strong background in full-stack development, building and engineering web systems.
+                        {ABOUT_TEXT.description}
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-3 pt-4 w-full">
@@ -80,10 +71,7 @@ export function AboutBanner() {
                                 className="group relative px-8 h-12 md:h-10 border border-zinc-200 dark:border-white/10 flex items-center justify-center overflow-hidden cursor-pointer w-full sm:w-auto sm:min-w-[150px]"
                             >
                                 <motion.div
-                                    variants={{
-                                        initial: { y: "100%" },
-                                        hover: { y: 0 }
-                                    }}
+                                    variants={{ initial: { y: "100%" }, hover: { y: 0 } }}
                                     transition={{ type: "spring", bounce: 0, duration: 0.4 }}
                                     className="absolute inset-0 bg-slate-950 dark:bg-white"
                                 />
@@ -97,12 +85,11 @@ export function AboutBanner() {
 
                 <div className="w-full xl:flex-[1.5] relative">
                     <div className="grid grid-cols-3 gap-3 lg:gap-3">
-                        {IMAGES.map((img) => (
+                        {ABOUT_IMAGES.map((img) => (
                             <ImageCard key={img.id} src={img.src} alt={img.alt} />
                         ))}
                     </div>
                 </div>
-
             </motion.div>
         </section >
     );

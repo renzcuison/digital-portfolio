@@ -62,7 +62,6 @@ export const COMPANION_THEMES = {
   }
 } as const;
 
-
 export const getGradientString = (
   theme: "light" | "dark",
   colors: typeof COMPANION_THEMES['light'] | typeof COMPANION_THEMES['dark'],
@@ -78,4 +77,16 @@ export const getGradientString = (
           radial-gradient(circle at ${100 - p.x2}% ${100 - p.y1}%, ${colors.c3} 0%, transparent 50%),
           radial-gradient(circle at ${p.y1}% ${p.x1}%, ${colors.c4} 0%, transparent 50%),
           ${theme === "dark" ? "#000" : "#fff"}`;
+};
+
+export const ABOUT_IMAGES = [
+  { id: 1, src: "/renz-left.png", alt: "Left View" },
+  { id: 2, src: "/renz-digital.png", alt: "Center View" },
+  { id: 3, src: "/renz-right.png", alt: "Right View" },
+];
+
+export const ABOUT_TEXT = {
+  label: "Creative Web Developer",
+  name: "Renz Cuison",
+  description: "I am a Creative Web Developer who aspires to create engaging digital experiences. While I am passionate about creative web development, I also have a strong background in full-stack development, building and engineering web systems.",
 };
