@@ -11,6 +11,20 @@ export function CursorFollower() {
     const { x, y } = useMousePosition();
     const { heat, isFiring, isOverheated, incrementHeat, fireInterval, stopFiring } = useWeapon();
 
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        const checkLoading = () => {
+            const loader = document.querySelector('[data-loading-active="true"]') ||
+                document.querySelector('.loading-screen-container');
+
+            setIsVisible(!loader);
+        };
+
+        const interval = setInterval(checkLoading, 100);
+        return () => clearInterval(interval);
+    }, []);
+
     const [holes, setHoles] = useState<{ id: string; x: number; y: number }[]>([]);
     const [pews, setPews] = useState<{ id: string; x: number; y: number; offsetX: number; offsetY: number }[]>([]);
 
@@ -77,6 +91,8 @@ export function CursorFollower() {
             stopFiring();
         };
     }, [isOverheated, stopFiring]);
+
+    if (!isVisible) return null;
 
     return (
         <>
