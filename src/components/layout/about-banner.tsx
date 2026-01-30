@@ -36,7 +36,7 @@ export function AboutBanner() {
     const { yTranslate, opacity } = useAboutScroll(containerRef);
 
     return (
-        <section ref={containerRef} className="relative w-full pt-12 pb-24 px-6 md:px-12 overflow-hidden bg-transparent">
+        <section ref={containerRef} className="relative w-full pt-12 pb-24 px-8 md:px-12 overflow-hidden bg-transparent">
             <svg className="absolute w-0 h-0">
                 <filter id="digital-stream">
                     <feTurbulence type="fractalNoise" baseFrequency="0 0.15" numOctaves="1" result="warp">
@@ -46,7 +46,7 @@ export function AboutBanner() {
                 </filter>
             </svg>
 
-            <motion.div style={{ opacity, y: yTranslate }} className="relative z-10 w-full flex flex-col xl:flex-row gap-8 lg:gap-12 items-center justify-between">
+            <motion.div style={{ opacity, y: yTranslate }} className="relative z-10 w-full flex flex-col xl:flex-row gap-8 lg:gap-12 items-start justify-between">
                 <div className="w-full xl:flex-1 space-y-8 z-20 flex flex-col justify-center">
                     <div className="space-y-1">
                         <span className="text-[10px] 2xl:text-xs font-black uppercase tracking-[0.4em] text-slate-950 dark:text-white">
