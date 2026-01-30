@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/global/button";
 import { Github, Mail, Linkedin, Check } from "lucide-react";
-import { ModeToggle } from "@/components/ui/mode-toggle";
+import { ModeToggle } from "@/components/ui/theme/mode-toggle";
 import { SITE_CONFIG } from "@/lib/constants";
 
 interface HeaderProps {

@@ -2,8 +2,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useVelocity, useTransform, useSpring, AnimatePresence, useMotionValue } from "framer-motion";
 
-import { useMousePosition } from "@/hooks/use-mouse-position";
-import { useWeapon } from "@/hooks/use-weapon";
+import { useMousePosition } from "@/hooks/cursor/use-mouse-position";
+import { useWeapon } from "@/hooks/cursor/use-weapon";
 import { BulletHole } from "./bullet-hole";
 import { GUN_SETTINGS, INTERACTIVE_ELEMENTS } from "@/lib/constants";
 

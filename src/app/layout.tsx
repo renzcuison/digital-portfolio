@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/ui/theme-provider";
+import { ThemeProvider } from "@/components/ui/theme/theme-provider";
 import { SITE_CONFIG } from "@/lib/constants";
 import { CursorFollower } from "@/components/ui/cursor/cursor-follower";
 

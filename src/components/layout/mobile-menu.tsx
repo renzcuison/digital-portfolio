@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { SITE_CONFIG } from "@/lib/constants";
-import { ModeToggle } from "@/components/ui/mode-toggle";
+import { ModeToggle } from "@/components/ui/theme/mode-toggle";
 import { X } from "lucide-react";
 
 interface MobileMenuProps {

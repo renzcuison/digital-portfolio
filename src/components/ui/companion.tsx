@@ -4,9 +4,9 @@ import { motion, AnimatePresence, useSpring, useTransform } from "framer-motion"
 import React, { useState, useEffect, useMemo } from "react";
 import { useTheme } from "next-themes";
 import { COMPANION_THEMES, getGradientString, COMPANION_CONFIG } from "@/lib/constants";
-import { useCompanionAnimation } from "@/hooks/use-companion-animation";
-import { useImagePreloader } from "@/hooks/use-image-preloader";
-import { useCompanionZoom } from "@/hooks/use-companion-zoom";
+import { useCompanionAnimation } from "@/hooks/companion/use-companion-animation";
+import { useImagePreloader } from "@/hooks/companion/use-image-preloader";
+import { useCompanionZoom } from "@/hooks/companion/use-companion-zoom";
 
 interface CompanionProps {
     imagePath: string;

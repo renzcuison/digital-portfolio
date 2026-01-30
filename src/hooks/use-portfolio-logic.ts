@@ -1,9 +1,9 @@
 import { COMPANIONS } from "@/lib/constants";
-import { useEnvironment } from "./use-environment";
-import { useAssetLoader } from "./use-asset-loader";
-import { useSyncLogic } from "./use-sync-logic";
+import { useEnvironment } from "./companion/use-environment";
+import { useAssetLoader } from "./loading-screen/use-asset-loader";
+import { useSyncLogic } from "./companion/use-sync-logic";
 import { useUIState } from "./use-ui-state";
-import { useMouseTracker } from "./use-mouse-tracker";
+import { useMouseTracker } from "./cursor/use-mouse-tracker";
 
 export function usePortfolioLogic() {
   const { mounted, isMobile } = useEnvironment();

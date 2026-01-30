@@ -2,11 +2,11 @@
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Header } from "@/components/layout/header";
-import { Hero } from "@/components/layout/hero";
+import { Header } from "@/components/layout/view/header";
+import { Hero } from "@/components/layout/view/hero";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 import { MobileMenu } from "@/components/layout/mobile-menu";
-import AboutBanner from "@/components/layout/about-banner";
+import AboutBanner from "@/components/layout/view/about-banner";
 import { InteractiveStage } from "@/components/layout/interactive-stage";
 import { usePortfolioLogic } from "@/hooks/use-portfolio-logic";
 
