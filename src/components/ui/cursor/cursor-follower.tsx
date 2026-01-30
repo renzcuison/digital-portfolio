@@ -82,26 +82,38 @@ export function CursorFollower() {
     }, [incrementHeat, recoilValue]);
 
     useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => { mousePos.current = { x: e.clientX, y: e.clientY }; };
+        const handleMouseMove = (e: MouseEvent) => {
+            mousePos.current = { x: e.clientX, y: e.clientY };
+        };
+
         const handleDown = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
             if (target.closest(INTERACTIVE_ELEMENTS) || window.getComputedStyle(target).cursor === 'pointer') return;
 
             executeShot();
             if (!isOverheatedRef.current) {
+                if (fireInterval.current) clearInterval(fireInterval.current);
                 fireInterval.current = setInterval(executeShot, GUN_SETTINGS.FIRE_RATE);
             }
         };
 
+        const forceStop = () => stopFiring();
+
         window.addEventListener("mousemove", handleMouseMove);
         window.addEventListener("mousedown", handleDown);
-        window.addEventListener("mouseup", stopFiring);
+        window.addEventListener("mouseup", forceStop);
+        window.addEventListener("dragstart", forceStop);
+        window.addEventListener("blur", forceStop);
+        window.addEventListener("contextmenu", forceStop);
 
         return () => {
             window.removeEventListener("mousemove", handleMouseMove);
             window.removeEventListener("mousedown", handleDown);
-            window.removeEventListener("mouseup", stopFiring);
-            stopFiring();
+            window.removeEventListener("mouseup", forceStop);
+            window.removeEventListener("dragstart", forceStop);
+            window.removeEventListener("blur", forceStop);
+            window.removeEventListener("contextmenu", forceStop);
+            forceStop();
         };
     }, [stopFiring, executeShot, fireInterval]);
 
