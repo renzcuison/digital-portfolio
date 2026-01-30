@@ -35,6 +35,12 @@ export default function Companion({
     const [mounted, setMounted] = useState(false);
 
     const imageLoaded = useImagePreloader(imagePath, onLoad);
+    const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+
+    useEffect(() => {
+        if (imageLoaded) setHasLoadedOnce(true);
+    }, [imageLoaded]);
+
     const anim = useCompanionAnimation(isActive, isBoosting);
 
     const rawZoom = useSpring(1, COMPANION_CONFIG.SPRING_ZOOM);
@@ -78,7 +84,7 @@ export default function Companion({
             style={{ perspective: "1200px", cursor: "auto" }}
         >
             <AnimatePresence>
-                {!imageLoaded && (
+                {!hasLoadedOnce && (
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: [0.1, 0.3, 0.1] }}
@@ -92,7 +98,7 @@ export default function Companion({
 
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: imageLoaded ? 1 : 0.98 }}
+                animate={{ opacity: 1, scale: hasLoadedOnce ? 1 : 0.98 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 ref={containerRef}
                 onMouseEnter={() => setIsHovering(true)}
@@ -138,8 +144,10 @@ export default function Companion({
                             maskSize: "contain",
                             WebkitMaskRepeat: "no-repeat",
                             WebkitMaskPosition: "center",
-                            backgroundColor: !imageLoaded ? themeConfig.fallbackBg : 'transparent',
-                            opacity: imageLoaded ? 1 : 0.5
+                            backgroundColor: !hasLoadedOnce ? themeConfig.fallbackBg : 'transparent',
+                            opacity: hasLoadedOnce ? 1 : 0.5,
+                            transform: "translateZ(0)",
+                            WebkitBackfaceVisibility: "hidden"
                         }}
                     >
                         <motion.div className="absolute inset-0 opacity-95" style={{
