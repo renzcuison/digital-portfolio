@@ -38,7 +38,13 @@ export default function Companion({
     const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
     useEffect(() => {
-        setHasLoadedOnce(false);
+        const img = new Image();
+        img.src = imagePath;
+        if (img.complete) {
+            setHasLoadedOnce(true);
+        } else {
+            setHasLoadedOnce(false);
+        }
     }, [imagePath]);
 
     useEffect(() => {
@@ -87,9 +93,10 @@ export default function Companion({
             className="absolute inset-0 z-0 flex items-center justify-center overflow-hidden bg-transparent pointer-events-none select-none"
             style={{ perspective: "1200px", cursor: "auto" }}
         >
-            <AnimatePresence>
+            <AnimatePresence mode="wait">
                 {!hasLoadedOnce && (
                     <motion.div
+                        key="halo-loader"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: [0.1, 0.3, 0.1] }}
                         exit={{ opacity: 0 }}
@@ -125,7 +132,7 @@ export default function Companion({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: hasLoadedOnce ? 1 : 0 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                    transition={{ duration: 0.4, ease: "easeInOut" }}
                     className="relative w-full h-full max-h-[45vh] md:max-h-[50vh] 2xl:max-h-[70vh] flex items-center justify-center pointer-events-auto"
                     onMouseDown={(e) => {
                         e.stopPropagation();
