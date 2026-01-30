@@ -12,8 +12,12 @@ export function CursorFollower() {
     const { heat, isFiring, isOverheated, incrementHeat, fireInterval, stopFiring } = useWeapon();
 
     const [isVisible, setIsVisible] = useState(true);
+    const [isTouchDevice, setIsTouchDevice] = useState(false);
 
     useEffect(() => {
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        setIsTouchDevice(isTouch);
+
         const handleHide = () => setIsVisible(false);
         const handleShow = () => setIsVisible(true);
 
@@ -97,7 +101,7 @@ export function CursorFollower() {
         };
     }, [isOverheated, stopFiring]);
 
-    if (!isVisible) return null;
+    if (!isVisible || isTouchDevice) return null;
 
     return (
         <>
