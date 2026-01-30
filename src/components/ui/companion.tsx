@@ -38,6 +38,10 @@ export default function Companion({
     const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
     useEffect(() => {
+        setHasLoadedOnce(false);
+    }, [imagePath]);
+
+    useEffect(() => {
         if (imageLoaded) setHasLoadedOnce(true);
     }, [imageLoaded]);
 
@@ -119,7 +123,9 @@ export default function Companion({
                 <motion.div
                     key={imagePath}
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                    animate={{ opacity: hasLoadedOnce ? 1 : 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
                     className="relative w-full h-full max-h-[45vh] md:max-h-[50vh] 2xl:max-h-[70vh] flex items-center justify-center pointer-events-auto"
                     onMouseDown={(e) => {
                         e.stopPropagation();
