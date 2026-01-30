@@ -28,7 +28,6 @@ const ImageCard = ({ src, alt }: { src: string, alt: string }) => (
                     alt={alt}
                     className="w-full h-full object-contain object-center z-20 transition-all duration-700"
                     style={{
-                        // Light blue scan filter, no animation or transforms
                         filter: 'url(#digital-stream) brightness(var(--img-brightness, 1)) contrast(1.1) sepia(1) saturate(3) hue-rotate(190deg)',
                         WebkitMaskImage: `radial-gradient(circle at center, black 35%, transparent 92%), linear-gradient(to bottom, black 65%, transparent 95%)`,
                         maskImage: `radial-gradient(circle at center, black 35%, transparent 92%), linear-gradient(to bottom, black 65%, transparent 95%)`,
