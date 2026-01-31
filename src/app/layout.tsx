@@ -53,7 +53,7 @@ export default function RootLayout({
       <head>
         <link
           rel="preload"
-          href="/frieren.png"
+          href="/Omdr4O7xSkx4qbQ.png"
           as="image"
           type="image/png"
         />

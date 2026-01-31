@@ -1,10 +1,10 @@
 import { COMPANIONS } from "./companions";
 
 export const CRITICAL_ASSETS = [
-    "/frieren.png",
-    "/renz-digital.png",
-    "/renz-left.png",
-    "/renz-right.png",
+    "/Omdr4O7xSkx4qbQ.png",
+    "/GVRVPa7OeVSoBRQ.png",
+    "/FaZULvjS2HOsp2E.png",
+    "/0XI2FNdaGeVz7xp.png",
     ...COMPANIONS.map((c) => c.path),
 ];
 

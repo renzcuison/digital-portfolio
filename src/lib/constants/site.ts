@@ -9,9 +9,9 @@ export const SITE_CONFIG = {
 };
 
 export const ABOUT_IMAGES = [
-    { id: 1, src: "/renz-left.png", alt: "Left View" },
-    { id: 2, src: "/renz-digital.png", alt: "Center View" },
-    { id: 3, src: "/renz-right.png", alt: "Right View" },
+    { id: 1, src: "/FaZULvjS2HOsp2E.png", alt: "Left View" },
+    { id: 2, src: "/GVRVPa7OeVSoBRQ.png", alt: "Center View" },
+    { id: 3, src: "/0XI2FNdaGeVz7xp.png", alt: "Right View" },
 ];
 
 export const ABOUT_TEXT = {

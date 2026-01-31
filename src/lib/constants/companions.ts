@@ -2,7 +2,7 @@ export const COMPANIONS = [
     {
         id: "mage",
         name: "FRIEREN",
-        path: "/frieren.png",
+        path: "/Omdr4O7xSkx4qbQ.png",
         bio: "A legendary elven mage who views time through the lens of eternity. Specialized in the quiet pursuit of human understanding.",
     },
     {
