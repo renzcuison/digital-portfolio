@@ -5,12 +5,7 @@ import { ABOUT_IMAGES, ABOUT_TEXT } from "@/lib/constants";
 import { useAboutScroll } from "@/hooks/use-about-scroll";
 
 const ImageCard = ({ src, alt }: { src: string, alt: string }) => (
-    <div className="relative shrink-0 flex-none [perspective:1000px]
-        w-[calc((100vw-4.5rem)/3)]
-        md:w-[calc((100vw-7rem)/3)]
-        lg:w-[35vh]
-        xl:w-[45vh]
-        max-w-full">
+    <div className="relative shrink-0 flex-none [perspective:1000px] w-[calc((100vw-4.5rem)/3)] md:w-[clamp(260px,30vw,45vh)] xl:w-[45vh] max-w-full">
 
         <div className="relative aspect-square rounded-[1.5vh] md:rounded-[3vh] overflow-hidden border border-zinc-200 dark:border-white/10 bg-white/50 dark:bg-black shadow-xl backdrop-blur-sm transition-all duration-500">
             <div
