@@ -2,11 +2,11 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
-import { SyncStatus } from "@/components/ui/sync-status";
+import { SyncStatus } from "@/components/ui/feedback/sync-status";
 
 const Companion = dynamic(() => import("@/components/ui/companion"), {
     loading: () => <div className="fixed inset-0 bg-transparent" />,
-    ssr: false // Ensure it only runs on the client to catch theme changes
+    ssr: false
 });
 
 interface InteractiveStageProps {
@@ -14,7 +14,6 @@ interface InteractiveStageProps {
 }
 
 export function InteractiveStage({ logic }: InteractiveStageProps) {
-    // Determine the character ID string safely
     const activeId = logic.activeCompanion?.id;
 
     return (
