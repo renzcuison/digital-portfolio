@@ -7,6 +7,7 @@ import { Hero } from "@/components/layout/view/hero";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 import { MobileMenu } from "@/components/layout/mobile-menu";
 import AboutBanner from "@/components/layout/view/about-banner";
+import { Projects } from "@/components/layout/view/projects";
 import { InteractiveStage } from "@/components/layout/interactive-stage";
 import { usePortfolioLogic } from "@/hooks/use-portfolio-logic";
 
@@ -60,6 +61,7 @@ export default function Home() {
         </div>
 
         <AboutBanner />
+        <Projects />
 
         <div className="fixed top-0 left-0 w-full z-[300] pointer-events-none pt-[env(safe-area-inset-top)] bg-transparent">
           <Header
