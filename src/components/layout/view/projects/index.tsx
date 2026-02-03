@@ -6,6 +6,7 @@ import { TECH_STACK, PROJECTS_CONTENT } from "@/lib/constants";
 
 import { TechMarquee } from "./tech-marquee";
 import { SKILL_ANIMATIONS } from "./skill-icons";
+import { ProjectTimeline } from "./project-timeline";
 
 export function Projects() {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -15,25 +16,29 @@ export function Projects() {
         <section ref={containerRef} className="relative w-full pt-0 pb-24 px-8 md:px-12 overflow-hidden bg-transparent">
             <motion.div
                 style={{ opacity, y: yTranslate }}
-                className="relative z-10 w-full flex flex-col xl:flex-row-reverse gap-8 lg:gap-32 items-stretch"
+                className="relative z-10 w-full flex flex-col gap-12 lg:gap-16"
             >
-                <div className="w-full xl:w-[500px] shrink-0 z-20 flex flex-col justify-between text-right py-1">
-                    <ProjectHeader />
-                    <div className="flex flex-col sm:flex-row-reverse gap-3 pt-12 w-full">
-                        <GithubButton url={PROJECTS_CONTENT.githubUrl} />
+                <div className="w-full flex flex-col xl:flex-row-reverse gap-8 lg:gap-32 items-stretch">
+                    <div className="w-full xl:w-[500px] shrink-0 z-20 flex flex-col justify-start gap-12 text-right py-1">
+                        <ProjectHeader />
+                        <div className="flex flex-col sm:flex-row-reverse gap-3 w-full">
+                            <GithubButton url={PROJECTS_CONTENT.githubUrl} />
+                        </div>
+                    </div>
+
+                    <div className="flex-1 min-w-0 relative flex flex-col gap-4">
+                        <TechMarquee items={TECH_STACK} />
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            {Object.entries(SKILL_ANIMATIONS).map(([title, Animation]) => (
+                                <SkillCard key={title} title={title}>
+                                    <Animation />
+                                </SkillCard>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
-                <div className="flex-1 min-w-0 relative flex flex-col gap-4">
-                    <TechMarquee items={TECH_STACK} />
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        {Object.entries(SKILL_ANIMATIONS).map(([title, Animation]) => (
-                            <SkillCard key={title} title={title}>
-                                <Animation />
-                            </SkillCard>
-                        ))}
-                    </div>
-                </div>
+                <ProjectTimeline />
             </motion.div>
         </section>
     );

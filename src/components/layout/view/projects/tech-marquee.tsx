@@ -6,7 +6,7 @@ interface TechItem {
 }
 
 export const TechMarquee = ({ items }: { items: TechItem[] }) => (
-    <div className="flex-1 relative bg-white/50 dark:bg-black/40 backdrop-blur-sm border border-zinc-200 dark:border-white/10 rounded-[2vh] flex items-center overflow-hidden py-12 shadow-sm">
+    <div className="flex-1 relative bg-white/50 dark:bg-black/40 backdrop-blur-sm border border-zinc-200 dark:border-white/10 rounded-[2vh] flex items-center overflow-hidden py-5 shadow-sm">
         <div className="flex w-max">
             <motion.div
                 className="flex gap-16 items-center px-8"
