@@ -1,46 +1,31 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Hero } from "@/components/layout/view/hero";
+import { Hero } from "@/components/layout/view/hero-about";
 import { Header } from "@/components/layout/view/header/index";
-import { MobileMenu } from "@/components/layout/view/header/mobile-menu";
-import { AboutBanner } from "@/components/layout/view/about-banner";
-import { Projects } from "@/components/layout/view/projects";
-import { LoadingScreen } from "@/components/ui/feedback/loading-screen";
+import { MobileMenu } from "@/components/layout/view/header/mobile/layout-tray";
+// import { AboutBanner } from "@/components/layout/view/about-banner";
+// import { Projects } from "@/components/layout/view/projects";
 import { usePortfolioLogic } from "@/hooks/ui/use-portfolio-logic";
+import { ObjectStage } from "@/components/layout/view/hero-about/object-stage";
 
 export default function Home() {
   const logic = usePortfolioLogic();
-  const [animationFinished, setAnimationFinished] = useState(false);
 
-  if (!logic.mounted) return <div className="h-screen bg-white dark:bg-black" />;
-
-  const showContent = logic.isReady && animationFinished;
+  if (!logic.mounted) return <div className="h-screen bg-white" />;
 
   return (
-    <main className="relative min-h-screen w-full bg-transparent transition-colors duration-500 overflow-x-hidden">
-      <AnimatePresence>
-        {!showContent && (
-          <LoadingScreen
-            key="loader"
-            progress={logic.progress}
-            status={logic.loadingStatus}
-            onComplete={() => setAnimationFinished(true)}
-          />
-        )}
-      </AnimatePresence>
-
+    <main className="relative min-h-screen w-full bg-white overflow-x-hidden">
       <motion.div
         key="main-content"
         initial={{ opacity: 0 }}
-        animate={{ opacity: showContent ? 1 : 0 }}
+        animate={{ opacity: 1 }}
         transition={{
-          duration: 0.6,
-          delay: 0.1,
+          duration: 0.8,
           ease: [0.43, 0.13, 0.23, 0.96]
         }}
-        className={`relative w-full ${!showContent ? "pointer-events-none" : ""}`}
+        className="relative w-full"
       >
         <div className="fixed top-0 left-0 w-full z-[300] pointer-events-none pt-[env(safe-area-inset-top)] bg-transparent">
           <Header
@@ -52,21 +37,23 @@ export default function Home() {
         </div>
 
         <div className="relative w-full h-screen z-[100]">
+          <ObjectStage logic={logic} />
+
           <AnimatePresence mode="wait">
             {!logic.menuOpen && (
               <Hero
-                activeCompanion={logic.activeCompanion}
+                key="hero-content"
+                activePage={logic.activePage}
                 selectedId={logic.selectedId}
                 setSelectedId={logic.setSelectedId}
-                isBoosting={logic.isBoosting}
                 logic={logic}
               />
             )}
           </AnimatePresence>
         </div>
 
-        <AboutBanner />
-        <Projects />
+        {/* <AboutBanner />
+        <Projects /> */}
       </motion.div>
 
       <MobileMenu

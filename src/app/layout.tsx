@@ -1,22 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/ui/theme/theme-provider";
-import { SITE_CONFIG } from "@/lib/constants";
+import { ThemeProvider } from "@/components/ui/env/theme-provider";
+import { SiteConfig } from "@/lib/constants";
 import { CursorFollower } from "@/components/ui/cursor/cursor-follower";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const notoSansJP = Noto_Sans_JP({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["200", "400", "600", "700", "900"],
+  variable: "--font-noto-sans-jp",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: SITE_CONFIG.name,
+  title: SiteConfig.name,
   description: "Digital Portfolio",
   icons: {
     icon: [
@@ -50,23 +47,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link
-          rel="preload"
-          href="/Omdr4O7xSkx4qbQ.png"
-          as="image"
-          type="image/png"
-        />
-      </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} font-mono antialiased selection:bg-cyan-500/30 bg-white dark:bg-black`}>
+      <body className={`${notoSansJP.variable} font-sans antialiased selection:bg-black selection:text-white bg-white text-black`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
-          enableSystem
+          defaultTheme="light"
+          forcedTheme="light"
+          enableSystem={false}
           disableTransitionOnChange
         >
           <CursorFollower />
-
           {children}
         </ThemeProvider>
       </body>

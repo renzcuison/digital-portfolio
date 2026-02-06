@@ -1,4 +1,3 @@
-export * from './companions';
 export * from './site';
 export * from './system';
 

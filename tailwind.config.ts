@@ -8,12 +8,15 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-noto-sans-jp)", "ui-sans-serif", "system-ui"],
+      },
       screens: {
         '3xl': '2000px',
       },
       boxShadow: {
-      'glow': '0 0 15px rgba(6, 182, 212, 0.5)',
-    }
+        'glow': '0 0 15px rgba(6, 182, 212, 0.5)',
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],

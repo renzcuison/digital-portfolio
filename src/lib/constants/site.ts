@@ -1,26 +1,19 @@
-export const SITE_CONFIG = {
+export const SiteConfig = {
     name: "Renz Cuison",
     email: "rbboy099@gmail.com",
-    phrase: "NOTHING FANCY, REALLY",
     links: {
         github: "https://github.com/renzcuison",
         linkedin: "https://linkedin.com/in/renzcuison",
     },
 };
 
-export const ABOUT_IMAGES = [
-    { id: 1, src: "/FaZULvjS2HOsp2E.png", alt: "Left View" },
-    { id: 2, src: "/GVRVPa7OeVSoBRQ.png", alt: "Center View" },
-    { id: 3, src: "/0XI2FNdaGeVz7xp.png", alt: "Right View" },
-];
-
-export const ABOUT_TEXT = {
+export const AboutContent = {
     label: "Creative Web Developer",
     name: "Renz Cuison",
     description: "I am a Creative Web Developer who aspires to create engaging digital experiences. While I am passionate about creative web development, many of my experiencecs was in full-stack development, building and engineering web systems.",
 };
 
-export const TECH_STACK = [
+export const TechStack = [
     { name: "Next.js", slug: "nextdotjs" },
     { name: "TypeScript", slug: "typescript" },
     { name: "Supabase", slug: "supabase" },
@@ -33,16 +26,16 @@ export const TECH_STACK = [
     { name: "Figma", slug: "figma" },
 ];
 
-export const PROJECTS_CONTENT = {
+export const ProjectsContent = {
     badge: "Selected Projects",
     title: "PROJECTS",
     description: "Here are the projects that highlight my journey in building scalable and user-centric applications.",
     githubUrl: "https://github.com/renzcuison",
 };
 
-export const PROJECTS = [
+export const Projects = [
     {
-        id: "01",
+        id: "1",
         year: "2024",
         title: "Greatbuy Web App",
         description: "An integrated inventory and e-commerce web application with real-time stock visibility and a modern UI.",
@@ -52,7 +45,7 @@ export const PROJECTS = [
         isBest: false
     },
     {
-        id: "02",
+        id: "2",
         year: "2025",
         title: "ManPro Payroll System",
         description: "A Payroll System with diverse employee management. Developed an exam-type module (similar to Google Forms) for the payroll system.",
@@ -62,7 +55,7 @@ export const PROJECTS = [
         isBest: false
     },
     {
-        id: "03",
+        id: "3",
         year: "2025",
         title: "SK Davao Del Sur Web App",
         description: "SK Davao Del Sur's own website. Led the UI/UX design for a professional yet modern interface with clean layouts and interactive user flows.",
@@ -72,7 +65,7 @@ export const PROJECTS = [
         isBest: false
     },
     {
-        id: "04",
+        id: "4",
         year: "2026",
         title: "Renz Cuison — Portfolio",
         description: "A Digital Portfolio. This marks the start of my Creative Web Development journey. My newest project paired with my latest knowledge.",
@@ -82,3 +75,26 @@ export const PROJECTS = [
         isBest: true
     }
 ];
+
+export const Pages = [
+    {
+        id: "about",
+        name: "About",
+        path: "/about",
+        model: "/frieren-compressed.glb"
+    },
+    {
+        id: "projects",
+        name: "Projects",
+        path: "/projects",
+        // model: "/projects-object.glb"
+    },
+    {
+        id: "contact",
+        name: "Contact",
+        path: "/contact",
+        // model: "/contact-mail.glb"
+    },
+] as const;
+
+export type PageId = typeof Pages[number]["id"];

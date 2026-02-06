@@ -38,7 +38,7 @@ export function AboutBanner() {
                     </div>
                 </div>
 
-                <div className="flex-1 min-0 flex flex-col md:flex-row gap-3">
+                <div className="flex-1 min-w-0 flex flex-row gap-2 md:gap-3 overflow-hidden">
                     {ABOUT_IMAGES.slice(0, 3).map((img) => (
                         <ImageCard key={img.id} src={img.src} alt={img.alt} />
                     ))}

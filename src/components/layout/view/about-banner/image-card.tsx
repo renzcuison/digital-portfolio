@@ -12,15 +12,7 @@ export const DigitalStreamFilter = () => (
 );
 
 export const ImageCard = ({ src, alt }: { src: string, alt: string }) => (
-    <div className="flex-1 relative bg-white/50 dark:bg-black/40 backdrop-blur-sm border border-zinc-200 dark:border-white/10 rounded-[2vh] p-3 flex flex-col items-center justify-center overflow-hidden aspect-[4/5] md:aspect-square lg:aspect-[4/5] xl:aspect-square">
-        <div
-            className="absolute inset-0 z-30 pointer-events-none opacity-[0.12] mix-blend-overlay"
-            style={{
-                background: `linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-                     linear-gradient(90deg, rgba(0, 150, 255, 0.1), rgba(0, 255, 255, 0.05), rgba(0, 100, 255, 0.1))`,
-                backgroundSize: '100% 4px, 3px 100%'
-            }}
-        />
+    <div className="relative flex-1 min-w-0 bg-white dark:bg-black/20 backdrop-blur-sm rounded-[2vh] p-3 flex flex-col items-center justify-center overflow-hidden aspect-square md:aspect-[4/5] lg:aspect-square">
         <div className="w-full h-full flex items-center justify-center relative p-[10%]">
             <img
                 src={src}

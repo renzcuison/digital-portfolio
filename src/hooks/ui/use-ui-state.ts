@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { SITE_CONFIG, CompanionId } from "@/lib/constants";
+import { SiteConfig, Pages, type PageId } from "@/lib/constants";
 
 export function useUIState() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [selectedId, setSelectedId] = useState<CompanionId>("mage");
+
+  const [selectedId, setSelectedId] = useState<PageId>("about");
 
   const copyEmail = () => {
-    navigator.clipboard.writeText(SITE_CONFIG.email);
+    navigator.clipboard.writeText(SiteConfig.email);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
