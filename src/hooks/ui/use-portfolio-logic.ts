@@ -1,13 +1,26 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useState, useEffect } from "react"; // Added useState, useEffect
 import { Pages, type PageId } from "@/lib/constants";
-import { useEnvironment } from "../companion/use-environment";
 import { useUIState } from "./use-ui-state";
 import { useMouseTracker } from "../cursor/use-mouse-tracker";
 
 export function usePortfolioLogic() {
-  const { mounted, isMobile } = useEnvironment();
+  // 1. Replace useEnvironment with standard state
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // 2. Add a simple mobile check since useEnvironment is gone
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const {
     menuOpen,
