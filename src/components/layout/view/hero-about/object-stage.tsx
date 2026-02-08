@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
 interface ObjectProps {
@@ -14,7 +14,13 @@ const Object = dynamic<ObjectProps>(() => import("@/components/ui/env/three-obje
 });
 
 export const ObjectStage = memo(({ logic }: { logic: any }) => {
-    if (!logic?.activePage?.id) return null;
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!logic?.activePage?.id || !mounted) return null;
 
     const x = typeof logic.mouseRawX === 'number' ? logic.mouseRawX : 0.5;
     const y = typeof logic.mouseRawY === 'number' ? logic.mouseRawY : 0.5;
