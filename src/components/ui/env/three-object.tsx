@@ -133,44 +133,55 @@ function SketchModel({ pushData }: { pushData: { x: number, y: number, time: num
 
 export default function Companion3D() {
     const [push, setPush] = React.useState<{ x: number, y: number, time: number } | null>(null);
+    const [mounted, setMounted] = React.useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const handlePointerDown = (e: React.PointerEvent) => {
-
         const rawX = (e.clientX / window.innerWidth) * 2 - 1;
         const rawY = -(e.clientY / window.innerHeight) * 2 + 1;
-
         const length = Math.sqrt(rawX * rawX + rawY * rawY) || 1;
-        const x = rawX / length;
-        const y = rawY / length;
-
-        setPush({ x, y, time: Date.now() });
+        setPush({ x: rawX / length, y: rawY / length, time: Date.now() });
     };
+
+    if (!mounted) return <section className="h-screen w-full bg-white" />;
 
     return (
         <section
-            className="fixed inset-0 w-full h-full bg-transparent overflow-hidden"
+            className="fixed inset-0 z-0 w-screen h-screen overflow-hidden"
             onPointerDown={handlePointerDown}
-            style={{ touchAction: 'none' }}
+            style={{
+                touchAction: 'none',
+
+                margin: 0,
+                padding: 0
+            }}
         >
-            <div className="relative w-full h-full contrast-110 brightness-100">
+            <div className="absolute inset-0 contrast-110 brightness-100">
                 <Canvas
                     shadows
-                    camera={{ position: [0, 0, 4], fov: 30 }}
+                    camera={{ position: [0, 0, 3.5], fov: 30 }}
                     gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
                     dpr={[1, 2]}
                 >
                     <Suspense fallback={null}>
                         <ambientLight intensity={1.2} />
                         <directionalLight position={[5, 5, 5]} intensity={2} />
-                        <Center>
+
+                        {/* We use a key here to force a recalculation once mounted */}
+                        <Center key="main-model-center">
                             <SketchModel pushData={push} />
                         </Center>
+
                         <ContactShadows position={[0, -1.6, 0]} opacity={0.25} scale={8} blur={3} />
                         <OrbitControls
                             makeDefault
-                            target={[0, 0, 0]}
                             enableZoom={true}
                             enablePan={false}
+                            enableDamping={true}
+                            target={[0, 0, 0]}
                         />
                     </Suspense>
                 </Canvas>
