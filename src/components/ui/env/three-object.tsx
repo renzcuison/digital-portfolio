@@ -148,13 +148,14 @@ export default function Companion3D() {
 
     return (
         <section
-            className="relative h-screen w-full flex items-center justify-center bg-transparent overflow-hidden"
+            className="fixed inset-0 w-full h-full bg-transparent overflow-hidden"
             onPointerDown={handlePointerDown}
+            style={{ touchAction: 'none' }}
         >
-            <div className="w-full h-full contrast-110 brightness-100">
+            <div className="relative w-full h-full contrast-110 brightness-100">
                 <Canvas
                     shadows
-                    camera={{ position: [0, 0, 3.5], fov: 30 }}
+                    camera={{ position: [0, 0, 4], fov: 30 }}
                     gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
                     dpr={[1, 2]}
                 >
@@ -165,7 +166,12 @@ export default function Companion3D() {
                             <SketchModel pushData={push} />
                         </Center>
                         <ContactShadows position={[0, -1.6, 0]} opacity={0.25} scale={8} blur={3} />
-                        <OrbitControls makeDefault enableZoom={true} enablePan={false} enableDamping={true} />
+                        <OrbitControls
+                            makeDefault
+                            target={[0, 0, 0]}
+                            enableZoom={true}
+                            enablePan={false}
+                        />
                     </Suspense>
                 </Canvas>
             </div>
