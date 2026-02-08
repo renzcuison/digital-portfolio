@@ -171,7 +171,7 @@ export default function Companion3D() {
                         <ambientLight intensity={1.2} />
                         <directionalLight position={[5, 5, 5]} intensity={2} />
 
-                        <group position={[0, -0.8, 0]}>
+                        <group position={[0, -0.5, 0]}>
                             <SketchModel pushData={push} />
                         </group>
 
