@@ -2,7 +2,7 @@
 
 import React, { Suspense, useEffect, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF, Center, OrbitControls, ContactShadows, useAnimations } from "@react-three/drei";
+import { useGLTF, Center, OrbitControls, useAnimations } from "@react-three/drei";
 import * as THREE from "three";
 
 const ModelPath = "/three-object.glb";
@@ -174,8 +174,6 @@ export default function Companion3D() {
                         <group position={[0, -0.5, 0]}>
                             <SketchModel pushData={push} />
                         </group>
-
-                        <ContactShadows position={[0, -0.8, 0]} opacity={0.25} scale={8} blur={3} />
 
                         <OrbitControls
                             makeDefault
