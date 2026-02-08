@@ -1,5 +1,5 @@
 export const SiteConfig = {
-    name: "Renz Cuison",
+    name: "renz cuison - portfolio",
     email: "rbboy099@gmail.com",
     links: {
         github: "https://github.com/renzcuison",
@@ -81,7 +81,7 @@ export const Pages = [
         id: "about",
         name: "About",
         path: "/about",
-        model: "/frieren-compressed.glb"
+        model: "/three-object.glb"
     },
     {
         id: "projects",

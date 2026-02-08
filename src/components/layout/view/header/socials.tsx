@@ -3,31 +3,35 @@ import React from "react";
 import { Check } from "lucide-react";
 import { SiteConfig } from "@/lib/constants";
 
-const NAV_STYLE = "text-[10px] font-medium tracking-[0.5em] uppercase text-black antialiased select-none";
+const navStyle = "text-[12px] font-light tracking-[0.2em] text-[#000000] subpixel-antialiased select-none lowercase";
 
 export function SocialActions({ copied, onCopyEmail }: { copied: boolean; onCopyEmail: () => void }) {
     return (
-        <div className="hidden md:flex items-center gap-7">
-            <SocialLink href={SiteConfig.links.github} label="Github" />
+        <div className="hidden md:flex items-center select-none pointer-events-auto">
+            <SocialLink href={SiteConfig.links.github} label="github" />
 
-            <div className="h-3 w-[1.2px] bg-black/40 rotate-[25deg]" />
+            { }
+            <div className="mx-5 w-4 h-[1px] bg-black opacity-60 rotate-[-10deg]" />
 
-            <SocialLink href={SiteConfig.links.linkedin} label="Linkedin" />
+            <SocialLink href={SiteConfig.links.linkedin} label="linkedin" />
 
-            <div className="h-3 w-[1.2px] bg-black/40 rotate-[25deg]" />
+            <div className="mx-5 w-4 h-[1px] bg-black opacity-60 rotate-[-10deg]" />
 
             <button
                 onClick={onCopyEmail}
-                className={`${NAV_STYLE} transition-all duration-300 hover:opacity-40 flex items-center gap-4 group`}
+                className={`${navStyle} flex items-center gap-3 transition-colors duration-300 hover:text-[#8E8E8A] group`}
             >
-                <div className="relative flex items-center justify-center">
+                <div className="flex items-center justify-center">
                     {copied ? (
-                        <Check className="h-3 w-3 text-black stroke-[3px]" />
+                        <Check className="h-3 w-3 text-[#000000] stroke-[2px]" />
                     ) : (
-                        <div className="h-1.5 w-1.5 rounded-full bg-black" />
+
+                        <div className="h-[3px] w-[3px] rounded-full bg-black/50 transition-all duration-300 group-hover:bg-[#8E8E8A]" />
                     )}
                 </div>
-                <span>{copied ? "Copied" : "Email"}</span>
+                <span className="font-medium"> { }
+                    {copied ? "copied" : "rbboy099@gmail.com"}
+                </span>
             </button>
         </div>
     );
@@ -39,7 +43,7 @@ function SocialLink({ href, label }: { href: string; label: string }) {
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            className={`${NAV_STYLE} hover:opacity-40 transition-opacity duration-300`}
+            className={`${navStyle} font-medium transition-all duration-300 hover:text-[#8E8E8A]`}
         >
             {label}
         </a>

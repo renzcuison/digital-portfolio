@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Logo } from "./name";
+import { Logo } from "./logo";
 import { SocialActions } from "./socials";
 import { MobileToggle } from "./mobile/close-button";
 

@@ -1,161 +1,174 @@
 "use client";
 
-import React, { Suspense, useMemo, useRef } from "react";
+import React, { Suspense, useEffect, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF, Center, OrbitControls, ContactShadows, Float } from "@react-three/drei";
+import { useGLTF, Center, OrbitControls, ContactShadows, useAnimations } from "@react-three/drei";
 import * as THREE from "three";
 
-const ModelPath = "/frieren-compressed.glb";
+const ModelPath = "/three-object.glb";
 
-function SketchModel() {
-    const { scene } = useGLTF(ModelPath);
-    const headRef = useRef<THREE.Object3D | null>(null);
-    const uniforms = useRef({
-        uTime: { value: 0 }
-    });
 
-    useMemo(() => {
-        const meshes: THREE.Mesh[] = [];
+
+function SketchModel({ pushData }: { pushData: { x: number, y: number, time: number } | null }) {
+    const { scene, animations } = useGLTF(ModelPath);
+    const { actions } = useAnimations(animations, scene);
+    const headBoneRef = useRef<THREE.Bone | null>(null);
+
+    const mouseQuaternion = useRef(new THREE.Quaternion());
+    const targetQuaternion = useRef(new THREE.Quaternion());
+    const currentEuler = useRef(new THREE.Euler(0, 0, 0, 'YXZ'));
+
+    const pushOffset = useRef(new THREE.Vector3(0, 0, 0));
+    const playTime = useRef(0.15);
+    const direction = useRef(1);
+
+    useEffect(() => {
+        if (pushData) {
+
+            const strength = 0.5;
+            pushOffset.current.set(
+                pushData.y * strength,
+                -pushData.x * strength,
+                0
+            );
+        }
+    }, [pushData]);
+
+    useEffect(() => {
         scene.traverse((child) => {
-            if (child.name.includes("Head") || child.name.includes("head")) {
-                headRef.current = child;
+            if (child instanceof THREE.Bone && (child.name === "mixamorigHead" || child.name === "mixamorig:Head")) {
+                headBoneRef.current = child;
             }
+            if (child instanceof THREE.Mesh) {
+                child.raycast = () => null;
 
-            if (child instanceof THREE.Mesh && !child.userData.isWireframe) {
-                meshes.push(child);
-            }
-        });
+                child.frustumCulled = false;
+                child.castShadow = true;
+                child.receiveShadow = true;
 
-        meshes.forEach((mesh) => {
-            const mainMat = new THREE.MeshStandardMaterial({
-                color: "#9ca3af",
-                roughness: 0.9,
-                metalness: 0,
-            });
+                const meshMaterial = new THREE.MeshStandardMaterial({
+                    color: "#8E8E8A",
+                    side: THREE.DoubleSide,
+                    roughness: 1.0,
+                    transparent: true,
+                    alphaTest: 0.1,
+                    alphaToCoverage: true,
+                });
 
-            const wireMat = new THREE.MeshBasicMaterial({
-                color: "#4b5563",
-                wireframe: true,
-                transparent: true,
-                opacity: 0.05,
-            });
-
-            const injectSway = (shader: any) => {
-                shader.uniforms.uTime = uniforms.current.uTime;
-                shader.vertexShader = `
-                uniform float uTime;
-                ${shader.vertexShader}
-                `.replace(
-                    `#include <begin_vertex>`,
-                    `
-                // 1. Existing Sway Logic
-                float heightMask = smoothstep(-0.2, 1.2, position.y);
-                float lateralDist = length(position.xz);
-                float hairMask = smoothstep(0.1, 0.2, lateralDist);
-                float finalSwayMask = heightMask * hairMask;
-
-                float waveX = sin(uTime * 2.0 + position.y * 4.0) * 0.05 * finalSwayMask;
-                float waveZ = cos(uTime * 1.5 + position.y * 3.0) * 0.03 * finalSwayMask;
-
-                // 2. New Breathing Logic
-                // Adjust these values based on your specific model's scale
-                vec3 chestCenter = vec3(0.0, 0.4, 0.1);
-                float distToChest = distance(position, chestCenter);
-
-                // Define how large the breathing area is (0.3 is the radius)
-                float breatheMask = smoothstep(0.3, 0.0, distToChest);
-
-                // Sine wave for timing: slow and rhythmic
-                float breatheCycle = sin(uTime * 1.5) * 0.5 + 0.5; // 0 to 1 range
-                float breatheIntensity = breatheCycle * 0.015 * breatheMask;
-
-                // 3. Combine transformations
-                // We add the breatheIntensity to the normal direction to "inflate"
-                vec3 transformed = vec3(position.x + waveX, position.y, position.z + waveZ);
-                transformed += normal * breatheIntensity;
-                `
-                );
-            };
-
-            mainMat.onBeforeCompile = injectSway;
-            wireMat.onBeforeCompile = injectSway;
-
-            mesh.material = mainMat;
-
-            const hasWireframe = mesh.children.some(child => child.userData.isWireframe);
-            if (!hasWireframe) {
-                const wireframe = new THREE.Mesh(mesh.geometry, wireMat);
-                wireframe.userData.isWireframe = true;
-                mesh.add(wireframe);
+                meshMaterial.onBeforeCompile = (shader) => {
+                    shader.vertexShader = `
+                        varying vec3 vObjectPosition;
+                        varying vec3 vLocalNormal;
+                        ${shader.vertexShader}
+                    `.replace(`#include <begin_vertex>`, `#include <begin_vertex>\nvObjectPosition = position;\nvLocalNormal = normal;`);
+                    shader.fragmentShader = `
+                        varying vec3 vObjectPosition;
+                        varying vec3 vLocalNormal;
+                        ${shader.fragmentShader}
+                    `.replace(`#include <alphatest_fragment>`, `
+                        float scale = 70.0;
+                        float thickness = 0.14;
+                        float smoothness = length(fwidth(vObjectPosition * scale)) * 0.7;
+                        vec3 blending = abs(vLocalNormal);
+                        blending = pow(blending, vec3(8.0));
+                        blending /= (blending.x + blending.y + blending.z + 0.0001);
+                        vec2 gridX = abs(fract(vObjectPosition.yz * scale - 0.5) - 0.5);
+                        vec2 gridY = abs(fract(vObjectPosition.xz * scale - 0.5) - 0.5);
+                        vec2 gridZ = abs(fract(vObjectPosition.xy * scale - 0.5) - 0.5);
+                        float edgeX = smoothstep(thickness + smoothness, thickness - smoothness, min(gridX.x, gridX.y));
+                        float edgeY = smoothstep(thickness + smoothness, thickness - smoothness, min(gridY.x, gridY.y));
+                        float edgeZ = smoothstep(thickness + smoothness, thickness - smoothness, min(gridZ.x, gridZ.y));
+                        float combinedMesh = edgeX * blending.x + edgeY * blending.y + edgeZ * blending.z;
+                        if (combinedMesh < 0.05) discard;
+                        diffuseColor.a *= combinedMesh;
+                        #include <alphatest_fragment>
+                    `);
+                };
+                child.material = meshMaterial;
             }
         });
 
-    }, [scene]);
+        if (animations.length > 0) {
+            const action = actions[Object.keys(actions)[0]];
+            if (action) {
+                action.reset().play();
+                action.paused = true;
+            }
+        }
+    }, [scene, actions, animations]);
 
-    useFrame((state) => {
-        uniforms.current.uTime.value = state.clock.getElapsedTime();
+    useFrame((state, delta) => {
+        const action = actions[Object.keys(actions)[0]];
+        if (action) {
+            const duration = action.getClip().duration;
+            playTime.current += delta * direction.current;
+            if (playTime.current >= duration - 0.15) { direction.current = -1; playTime.current = duration - 0.15; }
+            else if (playTime.current <= 0.15) { direction.current = 1; playTime.current = 0.15; }
+            action.time = playTime.current;
+        }
 
-        if (headRef.current) {
+        const head = headBoneRef.current;
+        if (head) {
             const { x, y } = state.mouse;
 
-            const targetRotationY = x * 0.6;
-            const targetRotationX = -y * 0.4;
+            currentEuler.current.set(
+                (-y * 0.4) + pushOffset.current.x,
+                (x * 0.6) + pushOffset.current.y,
+                0
+            );
 
-            headRef.current.rotation.y = THREE.MathUtils.lerp(
-                headRef.current.rotation.y,
-                targetRotationY,
-                0.1
-            );
-            headRef.current.rotation.x = THREE.MathUtils.lerp(
-                headRef.current.rotation.x,
-                targetRotationX,
-                0.1
-            );
+            targetQuaternion.current.setFromEuler(currentEuler.current);
+            mouseQuaternion.current.slerp(targetQuaternion.current, 0.1);
+
+            const animQuat = head.quaternion.clone();
+            head.quaternion.copy(animQuat).multiply(mouseQuaternion.current);
+            head.updateMatrix();
+
+            pushOffset.current.lerp(new THREE.Vector3(0, 0, 0), 0.08);
         }
     });
 
-    return (
-        <primitive object={scene}
-            rotation={[0, -Math.PI / 2, 0]}
-        />
-    );
+    return <primitive object={scene} />;
 }
 
 export default function Companion3D() {
+    const [push, setPush] = React.useState<{ x: number, y: number, time: number } | null>(null);
+
+    const handlePointerDown = (e: React.PointerEvent) => {
+
+        const rawX = (e.clientX / window.innerWidth) * 2 - 1;
+        const rawY = -(e.clientY / window.innerHeight) * 2 + 1;
+
+        const length = Math.sqrt(rawX * rawX + rawY * rawY) || 1;
+        const x = rawX / length;
+        const y = rawY / length;
+
+        setPush({ x, y, time: Date.now() });
+    };
+
     return (
-        <section className="relative h-screen w-full flex items-center justify-center bg-transparent overflow-hidden">
-            <div className="w-full h-full grayscale contrast-125 brightness-105">
+        <section
+            className="relative h-screen w-full flex items-center justify-center bg-transparent overflow-hidden"
+            onPointerDown={handlePointerDown}
+        >
+            <div className="w-full h-full contrast-110 brightness-100">
                 <Canvas
+                    shadows
                     camera={{ position: [0, 0, 3.5], fov: 30 }}
-                    gl={{ antialias: true, alpha: true }}
+                    gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+                    dpr={[1, 2]}
                 >
                     <Suspense fallback={null}>
-                        <ambientLight intensity={1.5} />
-                        <directionalLight position={[5, 5, 5]} intensity={1.5} />
+                        <ambientLight intensity={1.2} />
+                        <directionalLight position={[5, 5, 5]} intensity={2} />
                         <Center>
-                            <SketchModel />
+                            <SketchModel pushData={push} />
                         </Center>
-                        <ContactShadows
-                            position={[0, -1.6, 0]}
-                            opacity={0.15}
-                            scale={8}
-                            blur={3}
-                        />
-                        <OrbitControls
-                            makeDefault
-                            enableZoom={true}
-                            enablePan={false}
-                            enableDamping={true}
-                            autoRotate={false}
-                            autoRotateSpeed={0.5}
-                            minDistance={2}
-                            maxDistance={6}
-                        />
+                        <ContactShadows position={[0, -1.6, 0]} opacity={0.25} scale={8} blur={3} />
+                        <OrbitControls makeDefault enableZoom={true} enablePan={false} enableDamping={true} />
                     </Suspense>
                 </Canvas>
             </div>
         </section>
     );
 }
-
-useGLTF.preload(ModelPath);
