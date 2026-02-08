@@ -162,7 +162,8 @@ export default function Companion3D() {
             <div className="absolute inset-0 contrast-110 brightness-100">
                 <Canvas
                     shadows
-                    camera={{ position: [0, 0, 3.5], fov: 30 }}
+
+                    camera={{ position: [0, 0, 4], fov: 30 }}
                     gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
                     dpr={[1, 2]}
                 >
@@ -170,12 +171,12 @@ export default function Companion3D() {
                         <ambientLight intensity={1.2} />
                         <directionalLight position={[5, 5, 5]} intensity={2} />
 
-                        {/* We use a key here to force a recalculation once mounted */}
-                        <Center key="main-model-center">
+                        <group position={[0, -0.8, 0]}>
                             <SketchModel pushData={push} />
-                        </Center>
+                        </group>
 
-                        <ContactShadows position={[0, -1.6, 0]} opacity={0.25} scale={8} blur={3} />
+                        <ContactShadows position={[0, -0.8, 0]} opacity={0.25} scale={8} blur={3} />
+
                         <OrbitControls
                             makeDefault
                             enableZoom={true}
