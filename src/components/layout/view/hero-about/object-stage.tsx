@@ -20,7 +20,7 @@ export const ObjectStage = memo(({ logic }: { logic: any }) => {
     const y = typeof logic.mouseRawY === 'number' ? logic.mouseRawY : 0.5;
 
     return (
-        <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
+        <div className="fixed inset-0 z-10 pointer-events-none">
             <div className="w-full h-full pointer-events-auto">
                 <Object
                     key="STABLE_VISUAL_CONTEXT"
