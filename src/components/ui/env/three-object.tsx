@@ -1,8 +1,9 @@
 "use client";
 
 import React, { Suspense, useEffect, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF, Center, OrbitControls, useAnimations } from "@react-three/drei";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useGLTF, OrbitControls, useAnimations } from "@react-three/drei";
+import { EffectComposer, SMAA } from "@react-three/postprocessing";
 import * as THREE from "three";
 
 const ModelPath = "/three-object.glb";
@@ -10,6 +11,7 @@ const ModelPath = "/three-object.glb";
 function SketchModel({ pushData }: { pushData: { x: number, y: number, time: number } | null }) {
     const { scene, animations } = useGLTF(ModelPath);
     const { actions } = useAnimations(animations, scene);
+    const { camera, gl } = useThree();
     const headBoneRef = useRef<THREE.Bone | null>(null);
 
     const mouseQuaternion = useRef(new THREE.Quaternion());
@@ -20,9 +22,19 @@ function SketchModel({ pushData }: { pushData: { x: number, y: number, time: num
     const playTime = useRef(0.15);
     const direction = useRef(1);
 
+    const zoomVelocity = useRef(0);
+
+    useEffect(() => {
+        const handleWheel = (e: WheelEvent) => {
+            zoomVelocity.current += e.deltaY * 0.0005;
+        };
+
+        gl.domElement.addEventListener('wheel', handleWheel, { passive: false });
+        return () => gl.domElement.removeEventListener('wheel', handleWheel);
+    }, [gl]);
+
     useEffect(() => {
         if (pushData) {
-
             const strength = 0.5;
             pushOffset.current.set(
                 pushData.y * strength,
@@ -39,7 +51,6 @@ function SketchModel({ pushData }: { pushData: { x: number, y: number, time: num
             }
             if (child instanceof THREE.Mesh) {
                 child.raycast = () => null;
-
                 child.frustumCulled = false;
                 child.castShadow = true;
                 child.receiveShadow = true;
@@ -49,7 +60,8 @@ function SketchModel({ pushData }: { pushData: { x: number, y: number, time: num
                     side: THREE.DoubleSide,
                     roughness: 1.0,
                     transparent: true,
-                    alphaTest: 0.1,
+                    depthWrite: true,
+                    alphaTest: 0.15,
                     alphaToCoverage: true,
                 });
 
@@ -66,7 +78,7 @@ function SketchModel({ pushData }: { pushData: { x: number, y: number, time: num
                     `.replace(`#include <alphatest_fragment>`, `
                         float scale = 70.0;
                         float thickness = 0.14;
-                        float smoothness = length(fwidth(vObjectPosition * scale)) * 0.7;
+                        float smoothness = length(fwidth(vObjectPosition * scale)) * 0.9;
                         vec3 blending = abs(vLocalNormal);
                         blending = pow(blending, vec3(8.0));
                         blending /= (blending.x + blending.y + blending.z + 0.0001);
@@ -77,7 +89,7 @@ function SketchModel({ pushData }: { pushData: { x: number, y: number, time: num
                         float edgeY = smoothstep(thickness + smoothness, thickness - smoothness, min(gridY.x, gridY.y));
                         float edgeZ = smoothstep(thickness + smoothness, thickness - smoothness, min(gridZ.x, gridZ.y));
                         float combinedMesh = edgeX * blending.x + edgeY * blending.y + edgeZ * blending.z;
-                        if (combinedMesh < 0.05) discard;
+                        if (combinedMesh < 0.1) discard;
                         diffuseColor.a *= combinedMesh;
                         #include <alphatest_fragment>
                     `);
@@ -96,6 +108,16 @@ function SketchModel({ pushData }: { pushData: { x: number, y: number, time: num
     }, [scene, actions, animations]);
 
     useFrame((state, delta) => {
+        const moveDir = new THREE.Vector3();
+        state.camera.getWorldDirection(moveDir);
+        state.camera.position.addScaledVector(moveDir, -zoomVelocity.current);
+
+        zoomVelocity.current *= 0.95;
+
+        const dist = state.camera.position.length();
+        if (dist < 2.0) state.camera.position.setLength(2.0);
+        if (dist > 4.0) state.camera.position.setLength(4.0);
+
         const action = actions[Object.keys(actions)[0]];
         if (action) {
             const duration = action.getClip().duration;
@@ -108,20 +130,16 @@ function SketchModel({ pushData }: { pushData: { x: number, y: number, time: num
         const head = headBoneRef.current;
         if (head) {
             const { x, y } = state.mouse;
-
             currentEuler.current.set(
                 (-y * 0.4) + pushOffset.current.x,
                 (x * 0.6) + pushOffset.current.y,
                 0
             );
-
             targetQuaternion.current.setFromEuler(currentEuler.current);
             mouseQuaternion.current.slerp(targetQuaternion.current, 0.1);
-
             const animQuat = head.quaternion.clone();
             head.quaternion.copy(animQuat).multiply(mouseQuaternion.current);
             head.updateMatrix();
-
             pushOffset.current.lerp(new THREE.Vector3(0, 0, 0), 0.08);
         }
     });
@@ -132,6 +150,7 @@ function SketchModel({ pushData }: { pushData: { x: number, y: number, time: num
 export default function Companion3D() {
     const [push, setPush] = React.useState<{ x: number, y: number, time: number } | null>(null);
     const [mounted, setMounted] = React.useState(false);
+    const controlsRef = useRef<any>(null);
 
     useEffect(() => {
         setMounted(true);
@@ -152,7 +171,6 @@ export default function Companion3D() {
             onPointerDown={handlePointerDown}
             style={{
                 touchAction: 'none',
-
                 margin: 0,
                 padding: 0
             }}
@@ -160,23 +178,34 @@ export default function Companion3D() {
             <div className="absolute inset-0 contrast-110 brightness-100">
                 <Canvas
                     shadows
-
                     camera={{ position: [0, 0, 4], fov: 30 }}
-                    gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+                    gl={{
+                        antialias: false,
+                        alpha: true,
+                        powerPreference: "high-performance"
+                    }}
                     dpr={[1, 2]}
                 >
                     <ambientLight intensity={1.2} />
                     <directionalLight position={[5, 5, 5]} intensity={2} />
                     <Suspense fallback={null}>
-                        <group position={[0, -0.5, 0]}>
+
+                        <group position={[0, -0.475, 0]}>
                             <SketchModel pushData={push} />
                         </group>
 
+                        <EffectComposer multisampling={0}>
+                            <SMAA />
+                        </EffectComposer>
+
                         <OrbitControls
+                            ref={controlsRef}
                             makeDefault
-                            enableZoom={true}
+                            enableZoom={false}
                             enablePan={false}
                             enableDamping={true}
+                            dampingFactor={0.02}
+                            rotateSpeed={2.0}
                             target={[0, 0, 0]}
                         />
                     </Suspense>

@@ -14,13 +14,13 @@ const notoSansJP = Noto_Sans_JP({
 
 export const metadata: Metadata = {
   title: SiteConfig.name,
-  description: "Renz Cuison. Creative Developer. Exploring 3d space.",
+  description: "Digital Portfolio #1. Creative Developer. Exploring 3d space.",
   metadataBase: new URL('https://renzcuison.vercel.app'),
   openGraph: {
     title: SiteConfig.name,
-    description: 'Renz Cuison. Creative Developer. Exploring 3d space.',
+    description: 'Digital Portfolio #1. Creative Developer. Exploring 3d space.',
     url: 'https://renzcuison.vercel.app',
-    siteName: 'Renz Cuison',
+    siteName: SiteConfig.name,
     images: [
       {
         url: '/og-image.png',
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: SiteConfig.name,
-    description: 'Renz Cuison. Creative Developer. Exploring 3d space.',
+    description: 'Digital Portfolio #1. Creative Developer. Exploring 3d space.',
     images: ['/og-image.png'],
   },
   icons: {
