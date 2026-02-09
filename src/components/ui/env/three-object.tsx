@@ -167,10 +167,9 @@ export default function Companion3D() {
                     gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
                     dpr={[1, 2]}
                 >
+                    <ambientLight intensity={1.2} />
+                    <directionalLight position={[5, 5, 5]} intensity={2} />
                     <Suspense fallback={null}>
-                        <ambientLight intensity={1.2} />
-                        <directionalLight position={[5, 5, 5]} intensity={2} />
-
                         <group position={[0, -0.5, 0]}>
                             <SketchModel pushData={push} />
                         </group>

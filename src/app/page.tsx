@@ -9,6 +9,7 @@ import { MobileMenu } from "@/components/layout/view/header/mobile/layout-tray";
 // import { Projects } from "@/components/layout/view/projects";
 import { usePortfolioLogic } from "@/hooks/ui/use-portfolio-logic";
 import { ObjectStage } from "@/components/layout/view/hero-about/object-stage";
+import { LoadingScreen } from "@/components/loading-screen";
 
 export default function Home() {
   const logic = usePortfolioLogic();
@@ -17,13 +18,15 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen w-full bg-white overflow-x-hidden">
+      <LoadingScreen />
       <motion.div
         key="main-content"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{
           duration: 0.8,
-          ease: [0.43, 0.13, 0.23, 0.96]
+          ease: [0.43, 0.13, 0.23, 0.96],
+          delay: 2.2
         }}
         className="relative w-full"
       >

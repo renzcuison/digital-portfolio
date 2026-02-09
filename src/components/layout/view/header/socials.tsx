@@ -3,7 +3,7 @@ import React from "react";
 import { Check } from "lucide-react";
 import { SiteConfig } from "@/lib/constants";
 
-const navStyle = "text-[12px] font-light tracking-[0.2em] text-[#000000] subpixel-antialiased select-none lowercase";
+const navStyle = "text-[12px] font-medium tracking-[0.2em] text-[#000000] subpixel-antialiased select-none lowercase";
 
 export function SocialActions({ copied, onCopyEmail }: { copied: boolean; onCopyEmail: () => void }) {
     return (
