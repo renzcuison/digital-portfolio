@@ -16,10 +16,10 @@ export const PageSelector = React.memo(function PageSelector({
     return (
         <button
             onClick={onClick}
-            className="group relative flex items-center justify-end w-full h-12 cursor-pointer outline-none pointer-events-auto"
+            className="group relative flex items-center justify-end w-fit ml-auto h-12 cursor-pointer outline-none pointer-events-auto"
             aria-label={`Go to ${pageName}`}
         >
-            <div className="flex items-center">
+            <div className="flex items-center justify-end">
                 <AnimatePresence>
                     {isActive && (
                         <motion.div

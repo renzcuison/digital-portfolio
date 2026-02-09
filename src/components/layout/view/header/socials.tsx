@@ -10,12 +10,11 @@ export function SocialActions({ copied, onCopyEmail }: { copied: boolean; onCopy
         <div className="hidden md:flex items-center select-none pointer-events-auto">
             <SocialLink href={SiteConfig.links.github} label="github" />
 
-            { }
-            <div className="mx-5 w-4 h-[1px] bg-black opacity-60 rotate-[-10deg]" />
+            <div className="mx-5 w-4 h-[1px] bg-black opacity-50 rotate-[-10deg]" />
 
             <SocialLink href={SiteConfig.links.linkedin} label="linkedin" />
 
-            <div className="mx-5 w-4 h-[1px] bg-black opacity-60 rotate-[-10deg]" />
+            <div className="mx-5 w-4 h-[1px] bg-black opacity-50 rotate-[-10deg]" />
 
             <button
                 onClick={onCopyEmail}

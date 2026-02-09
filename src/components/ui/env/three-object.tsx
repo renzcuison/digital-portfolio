@@ -11,8 +11,11 @@ const ModelPath = "/three-object.glb";
 function SketchModel({ pushData }: { pushData: { x: number, y: number, time: number } | null }) {
     const { scene, animations } = useGLTF(ModelPath);
     const { actions } = useAnimations(animations, scene);
-    const { camera, gl } = useThree();
+    const { gl } = useThree();
     const headBoneRef = useRef<THREE.Bone | null>(null);
+
+    const mobileScale = 0.85;
+    const desktopScale = 1.0;
 
     const mouseQuaternion = useRef(new THREE.Quaternion());
     const targetQuaternion = useRef(new THREE.Quaternion());
@@ -61,7 +64,6 @@ function SketchModel({ pushData }: { pushData: { x: number, y: number, time: num
                     roughness: 1.0,
                     transparent: true,
                     depthWrite: true,
-                    alphaTest: 0.15,
                     alphaToCoverage: true,
                 });
 
@@ -144,7 +146,7 @@ function SketchModel({ pushData }: { pushData: { x: number, y: number, time: num
         }
     });
 
-    return <primitive object={scene} />;
+    return <primitive object={scene} scale={window.innerWidth < 768 ? mobileScale : desktopScale} />;
 }
 
 export default function Companion3D() {
@@ -180,7 +182,7 @@ export default function Companion3D() {
                     shadows
                     camera={{ position: [0, 0, 4], fov: 30 }}
                     gl={{
-                        antialias: false,
+                        antialias: true,
                         alpha: true,
                         powerPreference: "high-performance"
                     }}
@@ -189,15 +191,13 @@ export default function Companion3D() {
                     <ambientLight intensity={1.2} />
                     <directionalLight position={[5, 5, 5]} intensity={2} />
                     <Suspense fallback={null}>
-
+                        { }
                         <group position={[0, -0.475, 0]}>
                             <SketchModel pushData={push} />
                         </group>
-
                         <EffectComposer multisampling={0}>
                             <SMAA />
                         </EffectComposer>
-
                         <OrbitControls
                             ref={controlsRef}
                             makeDefault

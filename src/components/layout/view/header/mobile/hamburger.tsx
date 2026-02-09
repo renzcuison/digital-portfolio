@@ -20,7 +20,7 @@ export function MobileToggle({ menuOpen, setMenuOpen }: MobileToggleProps) {
                     animate={
                         menuOpen
                             ? { rotate: 45, y: 4, width: "24px" }
-                            : { rotate: 0, y: 0, width: "20px" }
+                            : { rotate: 0, y: 0, width: "24px" }
                     }
                     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     className="h-[1.2px] bg-black block origin-center antialiased"
@@ -30,7 +30,7 @@ export function MobileToggle({ menuOpen, setMenuOpen }: MobileToggleProps) {
                     animate={
                         menuOpen
                             ? { rotate: -45, y: -4, width: "24px" }
-                            : { rotate: 25, y: 0, width: "12px" }
+                            : { rotate: 0, y: 0, width: "24px" }
                     }
                     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     className="h-[1.2px] bg-black block origin-center antialiased"

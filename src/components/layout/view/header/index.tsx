@@ -2,7 +2,7 @@
 import React from "react";
 import { Logo } from "./logo";
 import { SocialActions } from "./socials";
-import { MobileToggle } from "./mobile/close-button";
+import { MobileToggle } from "./mobile/hamburger";
 
 interface HeaderProps {
     menuOpen: boolean;
