@@ -1,36 +1,22 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# renz cuison — portfolio
 
-## Getting Started
+> A minimalist 3D exploration focusing on the intersection of modern design and interactive web space.
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ◦ overview
+This project serves as a creative playground for 3D model integration and high-performance web animations. Built with a focus on typography, negative space, and fluid transitions.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ◦ tech stack
+- **Core:** Next.js (App Router)
+- **3D Engine:** React Three Fiber / Three.js
+- **Animation:** Framer Motion / CSS Keyframes
+- **Styling:** Tailwind CSS
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ◦ key features
+- **Custom 3D Stage:** Integration of optimized Tripo 3D models with custom environment mapping.
+- **Performance Optimized:** Deferred 3D rendering to ensure 60fps UI animations.
+- **Procedural Texture:** SVG-based noise filters for a tactile, paper-like feel.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+[renzcuison.vercel.app](https://renzcuison.vercel.app)
