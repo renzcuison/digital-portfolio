@@ -7,8 +7,6 @@ import * as THREE from "three";
 
 const ModelPath = "/three-object.glb";
 
-
-
 function SketchModel({ pushData }: { pushData: { x: number, y: number, time: number } | null }) {
     const { scene, animations } = useGLTF(ModelPath);
     const { actions } = useAnimations(animations, scene);
