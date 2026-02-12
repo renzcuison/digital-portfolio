@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface PageSelectorProps {
     pageName: string;
@@ -19,30 +19,18 @@ export const PageSelector = React.memo(function PageSelector({
             className="group relative flex items-center justify-end w-fit ml-auto h-12 cursor-pointer outline-none pointer-events-auto"
             aria-label={`Go to ${pageName}`}
         >
-            <div className="flex items-center justify-end">
-                <AnimatePresence>
-                    {isActive && (
-                        <motion.div
-                            initial={{ opacity: 0, scaleX: 0, x: 10 }}
-                            animate={{ opacity: 1, scaleX: 1, x: 0 }}
-                            exit={{ opacity: 0, scaleX: 0, x: 10 }}
-                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                            className="mr-4 w-6 h-[1.5px] bg-[#000000] rotate-[-10deg] origin-right"
-                        />
-                    )}
-                </AnimatePresence>
-
+            <div className="flex items-center justify-end relative">
                 <motion.span
                     initial={false}
                     animate={{
-                        color: "#000000",
+                        color: isActive ? "#8E8E8A" : "#000000",
                     }}
                     style={{
                         display: "block",
                         transformOrigin: "right center",
                         willChange: "transform",
                     }}
-                    className="text-[19px] font-bold tracking-[0.2em] lowercase subpixel-antialiased whitespace-nowrap leading-none transition-opacity duration-300 group-hover:opacity-60"
+                    className="text-[16px] font-bold tracking-[0.1em] uppercase subpixel-antialiased whitespace-nowrap leading-none transition-opacity duration-300 group-hover:opacity-50"
                 >
                     {pageName}
                 </motion.span>

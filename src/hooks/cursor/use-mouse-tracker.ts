@@ -1,9 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useMotionValue } from "framer-motion";
 
 export function useMouseTracker(isMobile: boolean) {
-  const mouseRawX = useMotionValue(0);
-  const mouseRawY = useMotionValue(0);
+  const mouseRawX = useRef(useMotionValue(0)).current;
+  const mouseRawY = useRef(useMotionValue(0)).current;
 
   useEffect(() => {
     if (isMobile) return;
@@ -15,7 +15,7 @@ export function useMouseTracker(isMobile: boolean) {
 
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [isMobile, mouseRawX, mouseRawY]);
+  }, [isMobile]);
 
   return { mouseRawX, mouseRawY };
 }

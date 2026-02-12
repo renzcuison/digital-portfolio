@@ -18,7 +18,7 @@ function GlassLens({ size = 0.075 }) {
         const handleMouseMove = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
             const isText = ["P", "SPAN", "H1", "H2", "H3", "H4", "H5", "H6", "A", "LI"].includes(target.tagName);
-            setIsHoveringText(isText);
+            setIsHoveringText((prev) => prev !== isText ? isText : prev);
         };
 
         window.addEventListener("mousemove", handleMouseMove);

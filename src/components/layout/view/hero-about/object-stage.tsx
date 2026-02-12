@@ -1,39 +1,26 @@
 "use client";
 
 import React, { memo, useEffect, useState } from "react";
-import dynamic from "next/dynamic";
+import Companion3D from "@/components/ui/env/three-object";
 
-interface ObjectProps {
-    mouseRawX: number;
-    mouseRawY: number;
-}
-
-const Object = dynamic<ObjectProps>(() => import("@/components/ui/env/three-object"), {
-    loading: () => <div className="opacity-0">Loading...</div>,
-    ssr: false
-});
-
-export const ObjectStage = memo(({ logic }: { logic: any }) => {
+export const ObjectStage = memo(() => {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    if (!logic?.activePage?.id || !mounted) return null;
-
-    const x = typeof logic.mouseRawX === 'number' ? logic.mouseRawX : 0.5;
-    const y = typeof logic.mouseRawY === 'number' ? logic.mouseRawY : 0.5;
+    if (!mounted) return null;
 
     return (
         <div className="fixed inset-0 z-10 pointer-events-none">
             <div className="w-full h-full pointer-events-auto">
-                <Object
+                <Companion3D
                     key="STABLE_VISUAL_CONTEXT"
-                    mouseRawX={x}
-                    mouseRawY={y}
+                    mouseRawX={0.5}
+                    mouseRawY={0.5}
                 />
             </div>
         </div>
     );
-});
+}, () => true);

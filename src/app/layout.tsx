@@ -1,14 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_JP } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ui/env/theme-provider";
 import { SiteConfig } from "@/lib/constants";
 import { CursorFollower } from "@/components/ui/cursor/cursor-follower";
 
-const notoSansJP = Noto_Sans_JP({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["200", "400", "600", "700", "900"],
-  variable: "--font-noto-sans-jp",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-plus-jakarta",
   display: "swap",
 });
 
@@ -70,7 +70,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${notoSansJP.variable} font-sans antialiased selection:bg-black selection:text-white bg-white text-black`}>
+      <body className={`${plusJakartaSans.variable} font-sans font-medium antialiased selection:bg-black selection:text-white bg-white text-black`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

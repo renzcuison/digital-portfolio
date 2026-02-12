@@ -87,13 +87,11 @@ export const Pages = [
         id: "projects",
         name: "Projects",
         path: "/projects",
-        // model: "/projects-object.glb"
     },
     {
         id: "contact",
         name: "Contact",
         path: "/contact",
-        // model: "/contact-mail.glb"
     },
 ] as const;
 

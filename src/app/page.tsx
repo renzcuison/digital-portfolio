@@ -8,7 +8,6 @@ import { MobileMenu } from "@/components/layout/view/header/mobile/layout-tray";
 // import { AboutBanner } from "@/components/layout/view/about-banner";
 // import { Projects } from "@/components/layout/view/projects";
 import { usePortfolioLogic } from "@/hooks/ui/use-portfolio-logic";
-import { ObjectStage } from "@/components/layout/view/hero-about/object-stage";
 import { LoadingScreen } from "@/components/loading-screen";
 
 export default function Home() {
@@ -40,8 +39,6 @@ export default function Home() {
         </div>
 
         <div className="relative w-full h-screen z-[100]">
-          <ObjectStage logic={logic} />
-
           <AnimatePresence mode="wait">
             {!logic.menuOpen && (
               <Hero
@@ -49,7 +46,6 @@ export default function Home() {
                 activePage={logic.activePage}
                 selectedId={logic.selectedId}
                 setSelectedId={logic.setSelectedId}
-                logic={logic}
               />
             )}
           </AnimatePresence>

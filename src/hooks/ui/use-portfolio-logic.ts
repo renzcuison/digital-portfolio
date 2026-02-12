@@ -49,7 +49,7 @@ export function usePortfolioLogic() {
     setSelectedId(id);
   }, [setSelectedId]);
 
-  return {
+  return useMemo(() => ({
     mounted, isReady, progress, loadingStatus, setSystemReady,
     menuOpen, setMenuOpen, copied, copyEmail,
     isMobile,
@@ -62,5 +62,5 @@ export function usePortfolioLogic() {
     isCurrentSynced: true,
     startHold: () => { },
     stopHold: () => { }
-  };
+  }), [mounted, menuOpen, setMenuOpen, copied, copyEmail, isMobile, selectedId, handleSetSelectedId, activePage]);
 }

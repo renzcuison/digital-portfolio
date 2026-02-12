@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-noto-sans-jp)", "ui-sans-serif", "system-ui"],
+        sans: ["var(--font-plus-jakarta)", "ui-sans-serif", "system-ui"],
       },
       screens: {
         '3xl': '2000px',

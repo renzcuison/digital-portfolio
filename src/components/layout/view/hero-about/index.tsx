@@ -1,19 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { memo } from "react";
 import { Pages, PageId } from "@/lib/constants";
-import { ObjectStage } from "./object-stage";
-import { Grid } from "../../../ui/env/background";
 import { HeroContent } from "./content";
+import { ObjectStage } from "./object-stage";
 
 interface HeroProps {
     activePage: typeof Pages[number];
     selectedId: PageId;
     setSelectedId: (id: PageId) => void;
-    logic: any;
 }
 
-export function Hero({ activePage, selectedId, setSelectedId, logic }: HeroProps) {
+export const Hero = memo(({ activePage, selectedId, setSelectedId }: HeroProps) => {
     return (
         <div className="relative flex flex-col h-full w-full overflow-hidden bg-[#fdfdfc]">
             <div
@@ -23,13 +21,7 @@ export function Hero({ activePage, selectedId, setSelectedId, logic }: HeroProps
                 }}
             />
 
-            <div className="absolute inset-0 z-0 mix-blend-multiply opacity-90">
-                <Grid mouseX={logic.mouseRawX} mouseY={logic.mouseRawY} />
-            </div>
-
-            <div className="absolute inset-0 z-10">
-                <ObjectStage logic={logic} />
-            </div>
+            <ObjectStage />
 
             <HeroContent
                 activePage={activePage}
@@ -38,4 +30,4 @@ export function Hero({ activePage, selectedId, setSelectedId, logic }: HeroProps
             />
         </div>
     );
-}
+});

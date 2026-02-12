@@ -1,37 +1,61 @@
 "use client";
-import React from "react";
-import { Check } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Check, Sun, Moon } from "lucide-react";
 import { SiteConfig } from "@/lib/constants";
 
-const navStyle = "text-[12px] font-medium tracking-[0.2em] text-[#000000] subpixel-antialiased select-none lowercase";
+const navStyle = "text-[12px] font-semibold tracking-[0.1em] text-[#000000] subpixel-antialiased select-none uppercase";
 
 export function SocialActions({ copied, onCopyEmail }: { copied: boolean; onCopyEmail: () => void }) {
     return (
-        <div className="hidden md:flex items-center select-none pointer-events-auto">
+        <div className="hidden md:flex items-center gap-8 select-none pointer-events-auto">
             <SocialLink href={SiteConfig.links.github} label="github" />
-
-            <div className="mx-5 w-4 h-[1px] bg-black opacity-50 rotate-[-10deg]" />
-
             <SocialLink href={SiteConfig.links.linkedin} label="linkedin" />
 
-            <div className="mx-5 w-4 h-[1px] bg-black opacity-50 rotate-[-10deg]" />
+            <div className="flex items-center gap-8">
+                <button
+                    onClick={onCopyEmail}
+                    className={`${navStyle} flex items-center transition-colors duration-300 hover:opacity-50`}
+                >
+                    <span className="flex items-center gap-2">
+                        {copied && <Check className="h-3 w-3 stroke-[2.5px]" />}
+                        {copied ? "copied" : "EMAIL"}
+                    </span>
+                </button>
 
-            <button
-                onClick={onCopyEmail}
-                className={`${navStyle} flex items-center gap-3 transition-colors duration-300 hover:text-[#8E8E8A] group`}
-            >
-                <div className="flex items-center justify-center">
-                    {copied ? (
-                        <Check className="h-3 w-3 text-[#000000] stroke-[2px]" />
-                    ) : (
+                <RealTimeClock />
+            </div>
+        </div>
+    );
+}
 
-                        <div className="h-[3px] w-[3px] rounded-full bg-black/50 transition-all duration-300 group-hover:bg-[#8E8E8A]" />
-                    )}
-                </div>
-                <span className="font-medium"> { }
-                    {copied ? "copied" : "rbboy099@gmail.com"}
-                </span>
-            </button>
+function RealTimeClock() {
+    const [time, setTime] = useState(new Date());
+
+    useEffect(() => {
+        const timer = setInterval(() => setTime(new Date()), 1000);
+        return () => clearInterval(timer);
+    }, []);
+
+    const hour = time.getHours();
+    const isDay = hour >= 6 && hour < 18;
+
+    return (
+        <div className="flex items-center gap-2.5">
+            <div className={`${navStyle} tabular-nums`}>
+                {time.toLocaleTimeString("en-US", {
+                    hour12: true,
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                })}
+            </div>
+            <div className="flex items-center justify-center translate-y-[-0.5px]">
+                {isDay ? (
+                    <Sun className="h-3 w-3 text-black fill-black stroke-[0.5px]" />
+                ) : (
+                    <Moon className="h-3 w-3 text-black fill-black stroke-[0.5px]" />
+                )}
+            </div>
         </div>
     );
 }
@@ -42,7 +66,7 @@ function SocialLink({ href, label }: { href: string; label: string }) {
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            className={`${navStyle} font-medium transition-all duration-300 hover:text-[#8E8E8A]`}
+            className={`${navStyle} transition-all duration-300 hover:opacity-50`}
         >
             {label}
         </a>
