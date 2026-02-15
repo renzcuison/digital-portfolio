@@ -14,7 +14,7 @@ This project serves as a creative playground for 3D model integration and high-p
 - **Styling:** Tailwind CSS
 
 ## ◦ key features
-- **Custom 3D Stage:** Integration of optimized Tripo 3D models with custom environment mapping.
+- **Custom 3D Stage:** Integration of 3D models with custom environment mapping.
 - **Performance Optimized:** Deferred 3D rendering to ensure 60fps UI animations.
 - **Procedural Texture:** SVG-based noise filters for a tactile, paper-like feel.
 
