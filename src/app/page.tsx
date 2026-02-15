@@ -5,8 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Hero } from "@/components/layout/view/hero-about";
 import { Header } from "@/components/layout/view/header/index";
 import { MobileMenu } from "@/components/layout/view/header/mobile/layout-tray";
-// import { AboutBanner } from "@/components/layout/view/about-banner";
-// import { Projects } from "@/components/layout/view/projects";
 import { usePortfolioLogic } from "@/hooks/ui/use-portfolio-logic";
 import { LoadingScreen } from "@/components/loading-screen";
 
@@ -50,9 +48,6 @@ export default function Home() {
             )}
           </AnimatePresence>
         </div>
-
-        {/* <AboutBanner />
-        <Projects /> */}
       </motion.div>
 
       <MobileMenu

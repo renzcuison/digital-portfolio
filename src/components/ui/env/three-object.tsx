@@ -4,7 +4,7 @@ import React, { Suspense, useEffect, useRef, useMemo, useState, memo } from "rea
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, OrbitControls, useAnimations } from "@react-three/drei";
 
-import { Grid } from "./background";
+import { Grid } from "./grass";
 import * as THREE from "three";
 
 interface Companion3DProps {
